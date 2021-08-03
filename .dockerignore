@@ -1,0 +1,6 @@
+src
+tests
+VideoFX-ubuntu18.04-x86_64-0.6.0.0
+CMakeLists.txt
+meson.build
+README.md
