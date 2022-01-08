@@ -1,6 +1,9 @@
 src
 tests
-VideoFX-ubuntu18.04-x86_64-0.6.0.0
 CMakeLists.txt
 meson.build
 README.md
+Audio_Effects_SDK.tar.gz
+maxine-docs
+build
+cmake-build-debug

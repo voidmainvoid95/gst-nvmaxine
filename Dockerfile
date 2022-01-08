@@ -1,22 +1,22 @@
-FROM nvidia/cuda:11.1-devel-ubuntu18.04
+FROM nvidia/cuda:11.3.1-devel-ubuntu18.04
 
-COPY cudnn-11.1-linux-x64-v8.0.4.30.tgz /cudnn-11.1-linux-x64-v8.0.4.30.tgz
+COPY cudnn-11.3-linux-x64-v8.2.1.32.tgz /cudnn.tgz
 
-COPY TensorRT-7.2.2.3.Ubuntu-18.04.x86_64-gnu.cuda-11.1.cudnn8.0.tar.gz /TensorRT-7.2.2.3.Ubuntu-18.04.x86_64-gnu.cuda-11.1.cudnn8.0.tar.gz
+COPY TensorRT-8.0.1.6.Linux.x86_64-gnu.cuda-11.3.cudnn8.2.tar.gz /tensor_rt.tar.gz
 
-COPY VideoFX-ubuntu18.04-x86_64-0.6.0.0.tar.gz /VideoFX-ubuntu18.04-x86_64-0.6.0.0.tar.gz
+COPY NVIDIA_VFX_SDK_Ubuntu18.04_0.6.5.0.tgz /video_fx.tar.gz
 
-RUN tar -xvf /cudnn-11.1-linux-x64-v8.0.4.30.tgz -C /usr/local
+RUN tar -xvf /cudnn.tgz -C /usr/local
 
-RUN tar -xvf /TensorRT-7.2.2.3.Ubuntu-18.04.x86_64-gnu.cuda-11.1.cudnn8.0.tar.gz -C /usr/local
+RUN tar -xvf /tensor_rt.tar.gz -C /usr/local
 
-RUN tar -xvf /VideoFX-ubuntu18.04-x86_64-0.6.0.0.tar.gz -C /usr/local
+RUN tar -xvf /video_fx.tar.gz -C /usr/local
 
-RUN rm -rf /cudnn-11.1-linux-x64-v8.0.4.30.tgz /TensorRT-7.2.2.3.Ubuntu-18.04.x86_64-gnu.cuda-11.1.cudnn8.0.tar.gz /VideoFX-ubuntu18.04-x86_64-0.6.0.0.tar.gz
+RUN rm -rf /cudnn.tgz /tensor_rt.tar.gz /video_fx.tar.gz
 
 RUN apt-get update && apt-get install -y cmake
 
-ENV LD_LIBRARY_PATH="${LD_LIBRARY_PATH}:/usr/local/cuda/lib64:/usr/local/VideoFX/lib:/usr/local/TensorRT-7.2.2.3/lib"
+ENV DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get update && apt-get -y install libgstreamer1.0-0 \
                         gstreamer1.0-plugins-base \
@@ -52,9 +52,9 @@ RUN apt-get update && apt-get -y install libgstreamer1.0-0 \
 
 RUN useradd -m user && yes password | passwd user
 
-RUN echo 'export LD_LIBRARY_PATH="${LD_LIBRARY_PATH}:/usr/local/cuda/lib64:/usr/local/VideoFX/lib:/usr/local/TensorRT-7.2.2.3/lib"' >> /etc/profile
+ENV LD_LIBRARY_PATH="${LD_LIBRARY_PATH}:/usr/local/cuda/lib64:/usr/local/VideoFX/lib:/usr/local/TensorRT-8.0.1.6/lib"
 
-RUN cd /usr/local/VideoFX/share/ && ./build_samples.sh -f -y -c -i ~/maxine-videofx-samples
+RUN echo 'export LD_LIBRARY_PATH="${LD_LIBRARY_PATH}:/usr/local/cuda/lib64:/usr/local/VideoFX/lib:/usr/local/TensorRT-8.0.1.6/lib"' >> /etc/profile
 
 # Enable this entrypoint to use container in ide
 ENTRYPOINT service ssh restart && sleep infinity

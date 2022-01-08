@@ -25,12 +25,12 @@ Read **NVIDIA_Video_Effects_SDK_Programming_Guide_Linux.pdf** for more informati
 This effect allows you to change the background using foreground mask provided by GreenScreen with a single jpeg.
 
 ## Build
-Retrieve **VideoFX-ubuntu18.04-x86_64-0.6.0.0.tar.gz** from  https://developer.nvidia.com/maxine-getting-started.
+Retrieve **NVIDIA_VFX_SDK_Ubuntu18.04_0.6.5.0.tgz** from  https://developer.nvidia.com/maxine-getting-started.
    **README_quickstart.md** present inside archive provides download links for the requested dependencies.
 
 ```
-     cudnn-11.1-linux-x64-v8.0.4.30.tgz
-     TensorRT-7.2.2.3.Ubuntu-18.04.x86_64-gnu.cuda-11.1.cudnn8.0.tar.gz
+     cudnn-11.3-linux-x64-v8.2.1.32.tgz 
+     TensorRT-8.0.1.6.Linux.x86_64-gnu.cuda-11.3.cudnn8.2.tar.gz
 ```   
 
 Meson is currently unsupported use cmake. 
@@ -45,9 +45,9 @@ make install
 This repo provide a Dockerfile for development and testing. To build image you must
 provide archives downloaded before:
 ```
-     cudnn-11.1-linux-x64-v8.0.4.30.tgz
-     TensorRT-7.2.2.3.Ubuntu-18.04.x86_64-gnu.cuda-11.1.cudnn8.0.tar.gz
-     VideoFX-ubuntu18.04-x86_64-0.6.0.0.tar.gz
+     cudnn-11.3-linux-x64-v8.2.1.32.tgz 
+     TensorRT-8.0.1.6.Linux.x86_64-gnu.cuda-11.3.cudnn8.2.tar.gz
+     NVIDIA_VFX_SDK_Ubuntu18.04_0.6.5.0.tgz 
 ```
 
 # Examples
