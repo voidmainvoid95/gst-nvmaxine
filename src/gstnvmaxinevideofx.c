@@ -90,14 +90,14 @@ static GstStaticPadTemplate gst_nv_maxine_videofx_src_template =
 GST_STATIC_PAD_TEMPLATE ("src",
     GST_PAD_SRC,
     GST_PAD_ALWAYS,
-    GST_STATIC_CAPS (GST_VIDEO_CAPS_MAKE ("{ BGR, I420 } "))
+    GST_STATIC_CAPS (GST_VIDEO_CAPS_MAKE ("{ BGR, I420, NV12 } "))
     );
 
 static GstStaticPadTemplate gst_nv_maxine_videofx_sink_template =
 GST_STATIC_PAD_TEMPLATE ("sink",
     GST_PAD_SINK,
     GST_PAD_ALWAYS,
-    GST_STATIC_CAPS (GST_VIDEO_CAPS_MAKE ("{ BGR, I420 } "))
+    GST_STATIC_CAPS (GST_VIDEO_CAPS_MAKE ("{ BGR, I420, NV12 } "))
     );
 
 G_DEFINE_TYPE_WITH_CODE (GstNvMaxineVideoFx, gst_nv_maxine_videofx, GST_TYPE_BASE_TRANSFORM,
