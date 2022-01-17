@@ -342,6 +342,13 @@ void videofx_parse_format(VideoFx *videoFx, GstCaps *in_caps, GstCaps *out_caps)
         videoFx->sourceSize = videoFx->sourceWidth * videoFx->sourceHeight * 3 / 2 * sizeof(guint8);
         videoFx->sourcePitch = videoFx->sourceWidth;
     }
+    else if (!g_strcmp0(in_format, "NV12")){
+        videoFx->sourceFormat = NVCV_YUV420;
+        videoFx->sourceComponentType = NVCV_U8;
+        videoFx->sourceLayout = NVCV_NV12;
+        videoFx->sourceSize = videoFx->sourceWidth * videoFx->sourceHeight * 3 / 2 * sizeof(guint8);
+        videoFx->sourcePitch = videoFx->sourceWidth;
+    }
 
     if (!g_strcmp0(out_format, "BGR")){
         videoFx->targetFormat = NVCV_BGR;
@@ -354,6 +361,13 @@ void videofx_parse_format(VideoFx *videoFx, GstCaps *in_caps, GstCaps *out_caps)
         videoFx->targetFormat = NVCV_YUV420;
         videoFx->targetComponentType = NVCV_U8;
         videoFx->targetLayout = NVCV_YUV;
+        videoFx->targetSize = videoFx->targetWidth * videoFx->targetHeight * 3 / 2 * sizeof(guint8);
+        videoFx->targetPitch = videoFx->targetWidth;
+    }
+    else if (!g_strcmp0(out_format, "NV12")){
+        videoFx->targetFormat = NVCV_YUV420;
+        videoFx->targetComponentType = NVCV_U8;
+        videoFx->targetLayout = NVCV_NV12;
         videoFx->targetSize = videoFx->targetWidth * videoFx->targetHeight * 3 / 2 * sizeof(guint8);
         videoFx->targetPitch = videoFx->targetWidth;
     }
