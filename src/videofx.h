@@ -63,7 +63,7 @@ typedef struct _VideoFx {
     NvCVImage tmpVFX;
     void *state[1];
     unsigned int state_size;
-    gboolean initialized, useMetadata;
+    gboolean initialized, useMetadata, buffersNegotiated;
 } VideoFx;
 
 void videofx_init(VideoFx *videofx);
@@ -84,9 +84,7 @@ NvCV_Status videofx_load_effect(VideoFx *videoFx);
 
 static NvCV_Status videofx_load_aux_green_screen(VideoFx *videoFx);
 
-void videofx_parse_format(VideoFx *videoFx, GstCaps *in_caps, GstCaps *out_caps);
-
-void videofx_parse_w_h(VideoFx *videoFx, GstCaps *caps);
+void videofx_set_buffers_params(VideoFx *videoFx, gint width, gint height, const gchar *format);
 
 NvCV_Status videofx_apply_effect(VideoFx *videoFx, guint8 *src, guint8 *dst);
 

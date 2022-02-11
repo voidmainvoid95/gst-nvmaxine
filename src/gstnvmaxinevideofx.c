@@ -87,18 +87,18 @@ enum
 };
 
 static GstStaticPadTemplate gst_nv_maxine_videofx_src_template =
-GST_STATIC_PAD_TEMPLATE ("src",
-    GST_PAD_SRC,
-    GST_PAD_ALWAYS,
-    GST_STATIC_CAPS (GST_VIDEO_CAPS_MAKE ("{ BGR, I420, NV12 } "))
-    );
+        GST_STATIC_PAD_TEMPLATE ("src",
+                                 GST_PAD_SRC,
+                                 GST_PAD_ALWAYS,
+                                 GST_STATIC_CAPS ("video/x-raw, "
+                                                  "format = (string) { BGR, I420, NV12 }"));
 
 static GstStaticPadTemplate gst_nv_maxine_videofx_sink_template =
 GST_STATIC_PAD_TEMPLATE ("sink",
     GST_PAD_SINK,
     GST_PAD_ALWAYS,
-    GST_STATIC_CAPS (GST_VIDEO_CAPS_MAKE ("{ BGR, I420, NV12 } "))
-    );
+    GST_STATIC_CAPS ("video/x-raw, "
+                     "format = (string) { BGR, I420, NV12 }"));
 
 G_DEFINE_TYPE_WITH_CODE (GstNvMaxineVideoFx, gst_nv_maxine_videofx, GST_TYPE_BASE_TRANSFORM,
                          GST_DEBUG_CATEGORY_INIT (gst_nv_maxine_videofx_debug_category, "nvmaxinevideofx", 0,
@@ -183,7 +183,6 @@ gst_nv_maxine_videofx_init (GstNvMaxineVideoFx *maxine)
     g_mutex_init (&maxine->mutex);
     g_mutex_lock(&maxine->mutex);
     videofx_init(&maxine->videoFx);
-    maxine->videoFx.initialized = FALSE;
     g_mutex_unlock(&maxine->mutex);
     gst_base_transform_set_qos_enabled(GST_BASE_TRANSFORM (maxine), TRUE);
     gst_base_transform_set_passthrough(GST_BASE_TRANSFORM (maxine), FALSE);
@@ -294,7 +293,7 @@ gst_nv_maxine_videofx_finalize (GObject * object)
       g_free(maxine->videoFx.imagePath);
   }
   g_mutex_unlock(&maxine->mutex);
-  g_mutex_clear (&maxine->mutex);
+  g_mutex_clear(&maxine->mutex);
 
   G_OBJECT_CLASS (gst_nv_maxine_videofx_parent_class)->finalize (object);
 }
@@ -305,40 +304,42 @@ gst_nv_maxine_videofx_transform_caps (GstBaseTransform * trans, GstPadDirection 
 {
     GstNvMaxineVideoFx *maxine = GST_NV_MAXINE_VIDEOFX (trans);
     GstCaps *othercaps;
-    GstStructure *othercaps_structure;
-    GValue target_width = {G_TYPE_INT, };
-    GValue target_height = {G_TYPE_INT, };
 
     GST_DEBUG_OBJECT (maxine, "transform_caps");
 
     othercaps = gst_caps_copy (caps);
 
-    if (direction == GST_PAD_SINK) {
-        g_mutex_lock(&maxine->mutex);
-        videofx_parse_w_h(&maxine->videoFx, caps);
-        g_value_set_int(&target_width, maxine->videoFx.targetWidth);
-        g_value_set_int(&target_height, maxine->videoFx.targetHeight);
-        g_mutex_unlock(&maxine->mutex);
-        othercaps = gst_caps_make_writable(othercaps);
-        othercaps_structure = gst_caps_get_structure(othercaps, 0);
-        gst_structure_set_value (othercaps_structure, "width", &target_width);
-        gst_structure_set_value(othercaps_structure, "height", &target_height);
-        g_value_unset (&target_width);
-        g_value_unset (&target_height);
-    }
-    else{
-        othercaps = gst_caps_make_writable(othercaps);
-        othercaps_structure = gst_caps_get_structure(othercaps, 0);
-        g_mutex_lock(&maxine->mutex);
-        if (maxine->videoFx.sourceWidth != 0 && maxine->videoFx.sourceHeight != 0){
-            g_value_set_int(&target_width, maxine->videoFx.sourceWidth );
-            g_value_set_int(&target_height, maxine->videoFx.sourceHeight);
-            gst_structure_set_value (othercaps_structure, "width", &target_width);
-            gst_structure_set_value(othercaps_structure, "height", &target_height);
-            g_value_unset (&target_width);
-            g_value_unset (&target_height);
+    if (!gst_caps_is_empty(caps)){
+        GstStructure  *caps_structure = gst_caps_get_structure (caps, 0);
+        const GValue *source_width, *source_height, *source_format;
+        source_width = gst_structure_get_value(caps_structure, "width");
+        source_height = gst_structure_get_value(caps_structure, "height");
+        source_format = gst_structure_get_value(caps_structure, "format");
+
+        if (direction == GST_PAD_SINK){
+            if (G_VALUE_HOLDS_INT(source_width) && G_VALUE_HOLDS_INT(source_height) && G_VALUE_HOLDS_STRING(source_format)) {
+                g_mutex_lock(&maxine->mutex);
+                if (maxine->videoFx.buffersNegotiated == FALSE) {
+                    videofx_set_buffers_params(&maxine->videoFx,
+                                               g_value_get_int(source_width),
+                                               g_value_get_int(source_height),
+                                               g_value_get_string(source_format));
+                    maxine->videoFx.buffersNegotiated = TRUE;
+                }
+                GValue target_width = { G_TYPE_INT, };
+                GValue target_height = { G_TYPE_INT, };
+                GstStructure *othercaps_structure;
+                othercaps = gst_caps_make_writable(othercaps);
+                othercaps_structure = gst_caps_get_structure(othercaps, 0);
+                g_value_set_int(&target_width, maxine->videoFx.targetWidth);
+                g_value_set_int(&target_height, maxine->videoFx.targetHeight);
+                gst_structure_set_value(othercaps_structure, "width", &target_width);
+                gst_structure_set_value(othercaps_structure, "height", &target_height);
+                g_value_unset(&target_width);
+                g_value_unset(&target_height);
+                g_mutex_unlock(&maxine->mutex);
+            }
         }
-        g_mutex_unlock(&maxine->mutex);
     }
 
     GST_DEBUG_OBJECT (maxine, "direction %d, transformed %" GST_PTR_FORMAT
@@ -354,7 +355,6 @@ gst_nv_maxine_videofx_transform_caps (GstBaseTransform * trans, GstPadDirection 
         GST_DEBUG_OBJECT (maxine, "Intersection %" GST_PTR_FORMAT, othercaps);
     }
 
-
     return othercaps;
 }
 
@@ -368,11 +368,9 @@ gst_nv_maxine_videofx_set_caps (GstBaseTransform * trans, GstCaps * incaps,
     GST_DEBUG_OBJECT (maxine, "set_caps");
     GST_DEBUG_OBJECT (trans, "INCAPS %" GST_PTR_FORMAT , incaps);
     GST_DEBUG_OBJECT (trans, "OUTCAPS %" GST_PTR_FORMAT , outcaps);
+
     g_mutex_lock(&maxine->mutex);
-
-    videofx_parse_format(&maxine->videoFx, incaps, outcaps);
-
-    if (maxine->videoFx.initialized == FALSE){
+    if (maxine->videoFx.initialized == FALSE && maxine->videoFx.buffersNegotiated == TRUE){
         GST_INFO_OBJECT (maxine, "Creating effect");
         CHECK_NvCV_RETURN_CODE(err = videofx_create_effect(&maxine->videoFx));
         GST_INFO_OBJECT (maxine, "Allocating buffers");
@@ -462,7 +460,7 @@ plugin_init (GstPlugin * plugin)
    remove these, as they're always defined.  Otherwise, edit as
    appropriate for your external plugin package. */
 #ifndef VERSION
-#define VERSION "0.1.0"
+#define VERSION "0.2.0"
 #endif
 #ifndef PACKAGE
 #define PACKAGE "gst-nvmaxine"

@@ -43,6 +43,7 @@ struct _GstNvMaxineVideoFx
     /* Guarding everything below */
     GMutex mutex;
     VideoFx videoFx;
+
 };
 
 struct _GstNvMaxineVideoFxClass

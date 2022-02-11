@@ -60,19 +60,19 @@ gst-inspect-1.0 nvmaxinevideofx
 ## Simple pipeline
 ```shell
 gst-launch-1.0 filesrc location="example_input.mp4" ! \
-qtdemux ! avdec_h264 ! video/x-raw,width=example_width,height=example_height ! queue ! \
-nvmaxinevideofx effect=SuperRes modeldir="/usr/local/VideoFx/lib/models" strength=1 upscalefactor=2 ! queue ! \
-x264enc ! mp4mux ! filesink location="example_output.mp4"
+qtdemux ! avdec_h264 ! queue ! \
+nvmaxinevideofx effect=SuperRes modeldir="/usr/local/VideoFX/lib/models" strength=1 upscalefactor=2 ! queue ! \
+x264enc ! qtmux ! filesink location="example_output.mp4"
 ```
 
 ## Multiple effect on same pipeline
 ```shell
 gst-launch-1.0 filesrc location="example_input.mp4" ! \
-qtdemux ! avdec_h264 ! video/x-raw,width=example_width,height=example_height ! queue ! \
-nvmaxinevideofx effect=ArtifactReduction modeldir="/usr/local/VideoFx/lib/models" strength=1 ! queue ! \
-nvmaxinevideofx effect=Denoising modeldir="/usr/local/VideoFx/lib/models" strength=1 ! queue ! \
-nvmaxinevideofx effect=SuperRes modeldir="/usr/local/VideoFx/lib/models" strength=1 upscalefactor=2 ! queue ! \
-x264enc ! mp4mux ! filesink location="example_output.mp4"
+qtdemux ! avdec_h264 ! queue ! \
+nvmaxinevideofx effect=ArtifactReduction modeldir="/usr/local/VideoFX/lib/models" strength=1 ! queue ! \
+nvmaxinevideofx effect=Denoising modeldir="/usr/local/VideoFX/lib/models" strength=1 ! queue ! \
+nvmaxinevideofx effect=SuperRes modeldir="/usr/local/VideoFX/lib/models" strength=1 upscalefactor=2 ! queue ! \
+x264enc ! qtmux ! filesink location="example_output.mp4"
 ```
 
 ## Using GreenScreen
@@ -80,31 +80,32 @@ GreenScreen filter append foreground mask to buffer metadata using **gstnvmaxine
 provide metadata=1 to BackgroundBlur or Composition if these effect are used after GreenScreen.
 ```shell
 gst-launch-1.0 filesrc location="example_input.mp4" ! \
-qtdemux ! avdec_h264 ! video/x-raw,width=example_width,height=example_height ! queue ! \
-nvmaxinevideofx effect=GreenScreen modeldir="/usr/local/VideoFx/lib/models" strength=0 ! queue ! \
-nvmaxinevideofx effect=BackgroundBlur modeldir="/usr/local/VideoFx/lib/models" strength=1.0 metadata=1 ! queue ! \
-x264enc ! mp4mux ! filesink location="example_output.mp4"
+qtdemux ! avdec_h264 ! queue ! \
+nvmaxinevideofx effect=GreenScreen modeldir="/usr/local/VideoFX/lib/models" strength=0 ! queue ! \
+nvmaxinevideofx effect=BackgroundBlur modeldir="/usr/local/VideoFX/lib/models" strength=1.0 metadata=1 ! queue ! \
+x264enc ! qtmux ! filesink location="example_output.mp4"
 
 gst-launch-1.0 filesrc location="example_input.mp4" ! \
-qtdemux ! avdec_h264 ! video/x-raw,width=example_width,height=example_height ! queue ! \
-nvmaxinevideofx effect=GreenScreen modeldir="/usr/local/VideoFx/lib/models" strength=0 ! queue ! \
-nvmaxinevideofx effect=Composition modeldir="/usr/local/VideoFx/lib/models" strength=1.0 metadata=1 imagepath="example_bg.jpeg" ! queue ! \
-x264enc ! mp4mux ! filesink location="example_output.mp4"
+qtdemux ! avdec_h264 ! queue ! \
+nvmaxinevideofx effect=GreenScreen modeldir="/usr/local/VideoFX/lib/models" strength=0 ! queue ! \
+nvmaxinevideofx effect=Composition modeldir="/usr/local/VideoFX/lib/models" strength=1.0 metadata=1 imagepath="example_bg.jpeg" ! queue ! \
+x264enc ! qtmux ! filesink location="example_output.mp4"
 ```
 
 ## Standalone BackgroundBlur and Composition
 Both effects have standalone mode in which GreenScreen is used internally. 
 ```bash
 gst-launch-1.0 filesrc location="example_input.mp4" ! \
-qtdemux ! avdec_h264 ! video/x-raw,width=example_width,height=example_height ! queue ! \
-nvmaxinevideofx effect=BackgroundBlur modeldir="/usr/local/VideoFx/lib/models" strength=1.0 ! queue ! \
-x264enc ! mp4mux ! filesink location="example_output.mp4"
+qtdemux ! avdec_h264 ! queue ! \
+nvmaxinevideofx effect=BackgroundBlur modeldir="/usr/local/VideoFX/lib/models" strength=1.0 ! queue ! \
+x264enc ! qtmux ! filesink location="example_output.mp4"
 
 gst-launch-1.0 filesrc location="example_input.mp4" ! \
-qtdemux ! avdec_h264 ! video/x-raw,width=example_width,height=example_height ! queue ! \
-nvmaxinevideofx effect=Composition modeldir="/usr/local/VideoFx/lib/models" strength=1.0 imagepath="example_bg.jpeg" ! queue ! \
-x264enc ! mp4mux ! filesink location="example_output.mp4"
+qtdemux ! avdec_h264 ! queue ! \
+nvmaxinevideofx effect=Composition modeldir="/usr/local/VideoFX/lib/models" strength=1.0 imagepath="example_bg.jpeg" ! queue ! \
+x264enc ! qtmux ! filesink location="example_output.mp4"
 ```
 
 # Work in progress
-Composition will support generic image or video input as sub-pipeline.
+1. Create nvmaxineaudiofx plugin based on Maxine<sup>TM</sup> Audio Effects SDK.
+2. Create nvmaxinearfx plugin base on Maxine<sup>TM</sup> Augmentend Reality SDK.

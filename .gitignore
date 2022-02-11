@@ -5,6 +5,8 @@ NVIDIA_VFX_SDK_Ubuntu18.04_0.6.5.0.tgz
 tools
 build
 cmake-build-debug
+cmake-build-debug*
 NVIDIA_Video_Effects_SDK_Programming_Guide_Linux.pdf
 maxine-docs
 Audio_Effects_SDK.tar.gz
+*mp4
