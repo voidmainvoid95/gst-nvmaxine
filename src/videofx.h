@@ -32,7 +32,11 @@
 #include "gstnvmaxinemeta.h"
 #include "utils.h"
 
-#define DEFAULT_MODEL_DIR "/usr/local/VideoFX/lib/models"
+#if _MSC_VER && !__INTEL_COMPILER
+    #define DEFAULT_MODEL_DIR "C:/Program\ Files\ (x86)/NVIDIA\ Corporation/NVIDIA\ VideoEffects/bin/models"
+#else
+    #define DEFAULT_MODEL_DIR "/usr/local/VideoFX/lib/models"
+#endif
 #define DEFAULT_AR_STRENGTH 1
 #define DEFAULT_UPSCALE_FACTOR_NUMERATOR 2
 #define DEFAULT_UPSCALE_FACTOR_DENOMINATOR 1
