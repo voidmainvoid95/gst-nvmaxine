@@ -27,14 +27,14 @@
 #include <nvCVImage.h>
 #include <gst/gst.h>
 #include <math.h>
-#include <unistd.h>
+
 #include <stdlib.h>
 #include "gstnvmaxinemeta.h"
 #include "utils.h"
 
-#if _MSC_VER && !__INTEL_COMPILER
+#if _WIN32
     #define DEFAULT_MODEL_DIR "C:/Program\ Files\ (x86)/NVIDIA\ Corporation/NVIDIA\ VideoEffects/bin/models"
-#else
+#elif defined(linux) || defined(unix) || defined(__linux)
     #define DEFAULT_MODEL_DIR "/usr/local/VideoFX/lib/models"
 #endif
 #define DEFAULT_AR_STRENGTH 1

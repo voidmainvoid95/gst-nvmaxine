@@ -1,73 +1,35 @@
-# Distributed under the OSI-approved BSD 3-Clause License.  See accompanying
-# file Copyright.txt or https://cmake.org/licensing for details.
+FILE(TO_CMAKE_PATH "$ENV{JPEG_DIR}" TRY1_DIR)
+FILE(TO_CMAKE_PATH "${JPEG_DIR}" TRY2_DIR)
+FILE(GLOB JPEG_DIR ${TRY1_DIR} ${TRY2_DIR})
 
-#[=======================================================================[.rst:
-FindJPEG
---------
+FIND_PACKAGE(PkgConfig QUIET)
+PKG_CHECK_MODULES(PC_JPEG QUIET jpeg)
 
-Find the Joint Photographic Experts Group (JPEG) library (``libjpeg``)
-
-Imported targets
-^^^^^^^^^^^^^^^^
-
-.. versionadded:: 3.12
-
-This module defines the following :prop_tgt:`IMPORTED` targets:
-
-``JPEG::JPEG``
-  The JPEG library, if found.
-
-Result variables
-^^^^^^^^^^^^^^^^
-
-This module will set the following variables in your project:
-
-``JPEG_FOUND``
-  If false, do not try to use JPEG.
-``JPEG_INCLUDE_DIRS``
-  where to find jpeglib.h, etc.
-``JPEG_LIBRARIES``
-  the libraries needed to use JPEG.
-``JPEG_VERSION``
-  .. versionadded:: 3.12
-    the version of the JPEG library found
-
-Cache variables
-^^^^^^^^^^^^^^^
-
-The following cache variables may also be set:
-
-``JPEG_INCLUDE_DIRS``
-  where to find jpeglib.h, etc.
-``JPEG_LIBRARY_RELEASE``
-  where to find the JPEG library (optimized).
-``JPEG_LIBRARY_DEBUG``
-  where to find the JPEG library (debug).
-
-.. versionadded:: 3.12
-  Debug and Release variand are found separately.
-
-Obsolete variables
-^^^^^^^^^^^^^^^^^^
-
-``JPEG_INCLUDE_DIR``
-  where to find jpeglib.h, etc. (same as JPEG_INCLUDE_DIRS)
-``JPEG_LIBRARY``
-  where to find the JPEG library.
-#]=======================================================================]
-
-find_path(JPEG_INCLUDE_DIR jpeglib.h)
+find_path(JPEG_INCLUDE_DIR jpeglib.h PATHS
+                        ${JPEG_DIR}/include
+                        ${PC_JPEG_INCLUDEDIR}
+                        ${PC_JPEG_INCLUDE_DIRS}
+                        ENV INCLUDE
+)
 
 set(jpeg_names ${JPEG_NAMES} jpeg jpeg-static libjpeg libjpeg-static)
 foreach(name ${jpeg_names})
   list(APPEND jpeg_names_debug "${name}d")
 endforeach()
-
+message(STATUS ${JPEG_INCLUDE_DIR})
 if(NOT JPEG_LIBRARY)
-  find_library(JPEG_LIBRARY_RELEASE NAMES ${jpeg_names} NAMES_PER_DIR)
-  find_library(JPEG_LIBRARY_DEBUG NAMES ${jpeg_names_debug} NAMES_PER_DIR)
-  include(${CMAKE_CURRENT_LIST_DIR}/SelectLibraryConfigurations.cmake)
-  select_library_configurations(JPEG)
+  find_library(JPEG_LIBRARY_RELEASE NAMES ${jpeg_names} 
+                                    PATHS ${JPEG_DIR}/lib
+                                          ${PC_JPEG_LIBDIR}
+                                          ${PC_JPEG_LIBRARY_DIRS} 
+                                    ENV LIB
+                                    NO_SYSTEM_ENVIRONMENT_PATH
+                                    }
+  find_library(JPEG_LIBRARY_DEBUG NAMES ${jpeg_names_debug}    
+                                  PATHS ${JPEG_DIR}/lib
+                                        ${PC_JPEG_LIBDIR}
+                                        ${PC_JPEG_LIBRARY_DIRS})
+  )
   mark_as_advanced(JPEG_LIBRARY_RELEASE JPEG_LIBRARY_DEBUG)
 endif()
 unset(jpeg_names)
@@ -101,11 +63,6 @@ if(JPEG_INCLUDE_DIR)
   unset(_JPEG_CONFIG_HEADERS_FEDORA)
   unset(_JPEG_CONFIG_HEADERS_DEBIAN)
 endif()
-
-include(${CMAKE_CURRENT_LIST_DIR}/FindPackageHandleStandardArgs.cmake)
-find_package_handle_standard_args(JPEG
-  REQUIRED_VARS JPEG_LIBRARY JPEG_INCLUDE_DIR
-  VERSION_VAR JPEG_VERSION)
 
 if(JPEG_FOUND)
   set(JPEG_LIBRARIES ${JPEG_LIBRARY})
