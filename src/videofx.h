@@ -33,7 +33,8 @@
 #include "utils.h"
 
 #define DEFAULT_MODEL_DIR "/usr/local/VideoFX/lib/models"
-#define DEFAULT_AR_STRENGTH 1
+#define DEFAULT_STRENGTH 0.4
+#define DEFAULT_MODE 1
 #define DEFAULT_UPSCALE_FACTOR_NUMERATOR 2
 #define DEFAULT_UPSCALE_FACTOR_DENOMINATOR 1
 #define NVVFX_FX_COMPOSITION "Composition"
@@ -49,6 +50,7 @@ typedef struct _VideoFx {
     CUstream stream;
     gchar *effect, *modelDir, *imagePath;
     gfloat strength;
+    guint mode;
     UpscaleFactor upscaleFactor;
     gint targetWidth, targetHeight, targetPitch, sourceWidth, sourceHeight, sourcePitch;
     NvCVImage_PixelFormat sourceFormat, targetFormat;

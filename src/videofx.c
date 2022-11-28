@@ -26,7 +26,8 @@ void videofx_init(VideoFx *videofx)
 {
     videofx->effect = g_strdup(NVVFX_FX_ARTIFACT_REDUCTION);
     videofx->modelDir = g_strdup(DEFAULT_MODEL_DIR);
-    videofx->strength = DEFAULT_AR_STRENGTH;
+    videofx->strength = DEFAULT_STRENGTH;
+    videofx->mode = DEFAULT_MODE;
     videofx->upscaleFactor.numerator = DEFAULT_UPSCALE_FACTOR_NUMERATOR;
     videofx->upscaleFactor.denominator = DEFAULT_UPSCALE_FACTOR_DENOMINATOR;
     videofx->upscaleFactor.value = (gfloat) videofx->upscaleFactor.numerator / (gfloat) videofx->upscaleFactor.denominator;
@@ -300,14 +301,15 @@ NvCV_Status videofx_load_effect(VideoFx *videoFx){
     }
 
 
-    if (!g_strcmp0(videoFx->effect, NVVFX_FX_ARTIFACT_REDUCTION) || !g_strcmp0(videoFx->effect, NVVFX_FX_SUPER_RES)){
-        CHECK_NvCV_RETURN_CODE(vfxErr = NvVFX_SetU32(videoFx->effect_handler, NVVFX_STRENGTH, (unsigned int)roundf(videoFx->strength)));
+    if (!g_strcmp0(videoFx->effect, NVVFX_FX_ARTIFACT_REDUCTION) ||
+        !g_strcmp0(videoFx->effect, NVVFX_FX_SUPER_RES) ||
+        !g_strcmp0(videoFx->effect, NVVFX_FX_GREEN_SCREEN)){
+        CHECK_NvCV_RETURN_CODE(vfxErr = NvVFX_SetU32(videoFx->effect_handler, NVVFX_MODE, videoFx->mode));
     } else if (!g_strcmp0(videoFx->effect, NVVFX_FX_SR_UPSCALE) ||
-                !g_strcmp0(videoFx->effect, NVVFX_FX_DENOISING) ||
-                !g_strcmp0(videoFx->effect, NVVFX_FX_BGBLUR)){
-            CHECK_NvCV_RETURN_CODE(vfxErr = NvVFX_SetF32(videoFx->effect_handler, NVVFX_STRENGTH, videoFx->strength));
-    } else if(!g_strcmp0(videoFx->effect, NVVFX_FX_GREEN_SCREEN)){
-        CHECK_NvCV_RETURN_CODE(vfxErr = NvVFX_SetU32(videoFx->effect_handler, NVVFX_MODE, (unsigned int)roundf(videoFx->strength)));
+               !g_strcmp0(videoFx->effect, NVVFX_FX_BGBLUR)){
+        CHECK_NvCV_RETURN_CODE(vfxErr = NvVFX_SetF32(videoFx->effect_handler, NVVFX_STRENGTH, videoFx->strength));
+    } else if(!g_strcmp0(videoFx->effect, NVVFX_FX_DENOISING)){
+        CHECK_NvCV_RETURN_CODE(vfxErr = NvVFX_SetF32(videoFx->effect_handler, NVVFX_STRENGTH, (unsigned int)roundf(videoFx->strength)));
     }
 
     if (!g_strcmp0(videoFx->effect, NVVFX_FX_DENOISING)){
