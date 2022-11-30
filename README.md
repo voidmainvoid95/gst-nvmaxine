@@ -81,6 +81,8 @@ sudo tar -xvf TensorRT-8.2.5.1.Linux.x86_64-gnu.cuda-11.4.cudnn8.2.tar.gz /usr/l
 
 # install NVIDIA VFK
 sudo tar -xvf NVIDIA_VFX_SDK_Linux_0.7.1.0.tgz -C /usr/local
+
+sudo echo 'export LD_LIBRARY_PATH="${LD_LIBRARY_PATH}:/usr/local/cuda/lib64:/usr/local/VideoFX/lib:/usr/local/TensorRT-8.2.5.1/lib"' >> /etc/profile
 ```
     
 

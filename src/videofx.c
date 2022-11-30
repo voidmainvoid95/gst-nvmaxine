@@ -274,7 +274,7 @@ static NvCV_Status videofx_load_aux_green_screen(VideoFx *videoFx){
     NvCV_Status vfxErr;
     CHECK_NvCV_RETURN_CODE(vfxErr = NvVFX_SetImage(videoFx->aux_handler, NVVFX_INPUT_IMAGE, &videoFx->srcGpuBuf));
     CHECK_NvCV_RETURN_CODE(vfxErr = NvVFX_SetImage(videoFx->aux_handler, NVVFX_OUTPUT_IMAGE, &videoFx->maskGpuBuf));
-    CHECK_NvCV_RETURN_CODE(vfxErr = NvVFX_SetU32(videoFx->aux_handler, NVVFX_MODE, (unsigned int)roundf(1 - videoFx->strength)));
+    CHECK_NvCV_RETURN_CODE(vfxErr = NvVFX_SetU32(videoFx->aux_handler, NVVFX_MODE, videoFx->mode));
     CHECK_NvCV_RETURN_CODE(vfxErr = NvVFX_Load(videoFx->aux_handler));
     bail:
     return vfxErr;

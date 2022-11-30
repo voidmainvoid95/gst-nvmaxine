@@ -149,7 +149,7 @@ gst_nv_maxine_videofx_class_init (GstNvMaxineVideoFxClass * klass)
     g_object_class_install_property (gobject_class, PROP_STRENGTH,
                                      g_param_spec_float ("strength", "Strength",
                                                          "For effect=Upscale, Denoising, BackgroundBlur: "
-                                                         "Strength of effect (value between 0 to 1) Default 0.4\n\t\t\t",
+                                                         "Strength of effect (value between 0 to 1) Default 0.4",
                                                          0.0,
                                                          1.0,
                                                          DEFAULT_STRENGTH,
@@ -157,7 +157,7 @@ gst_nv_maxine_videofx_class_init (GstNvMaxineVideoFxClass * klass)
     g_object_class_install_property (gobject_class, PROP_MODE,
                                      g_param_spec_uint ("mode", "Mode",
                                                          "For effect=ArtifactReduction, SuperRes, GreenScreen: "
-                                                         "Effect mode: (0: quality mode, 1 performance mode) Default 1\n\t\t\t",
+                                                         "Effect mode: (0: quality mode, 1 performance mode) Default 1",
                                                          0,
                                                          1,
                                                          DEFAULT_MODE,
