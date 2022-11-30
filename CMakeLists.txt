@@ -52,28 +52,28 @@ set(gst_LIBRARIES
 find_package(CUDA REQUIRED)
 find_library(NVINFER nvinfer
         PATHS $ENV{LD_LIBRARY_PATH}
-        /usr/local/TensorRT-7.2.2.3/lib
+        /usr/local/TensorRT-8.2.5.1/lib
         /usr/lib/x86_64-linux-gnu
         /usr/lib64
         /usr/lib
         )
 find_library(NVINFERPLUGIN NAMES nvinfer_plugin
         PATHS $ENV{LD_LIBRARY_PATH}
-        /usr/local/TensorRT-7.2.2.3/lib
+        /usr/local/TensorRT-8.2.5.1/lib
         /usr/lib/x86_64-linux-gnu
         /usr/lib64
         /usr/lib
         )
 find_library(NVPARSERS NAMES nvparsers
         PATHS $ENV{LD_LIBRARY_PATH}
-        /usr/local/TensorRT-7.2.2.3/lib
+        /usr/local/TensorRT-8.2.5.1/lib
         /usr/lib/x86_64-linux-gnu
         /usr/lib64
         /usr/lib
         )
 find_library(NVONNXPARSER NAMES nvonnxparser
         PATHS $ENV{LD_LIBRARY_PATH}
-        /usr/local/TensorRT-7.2.2.3/lib
+        /usr/local/TensorRT-8.2.5.1/lib
         /usr/lib/x86_64-linux-gnu
         /usr/lib64
         /usr/lib
@@ -176,7 +176,7 @@ link_directories(
         ${GSTREAMER-VIDEO_LIBRARY_DIRS}
         ${CUDA_TOOLKIT_ROOT_DIR}/lib64
         /usr/local/VideoFX/lib
-        /usr/local/TensorRT-7.2.2.3/lib
+        /usr/local/TensorRT-8.2.5.1/lib
 )
 
 set(GST_NV_MAXINE_VIDEOFX_SRC
