@@ -88,7 +88,7 @@ sudo echo 'export LD_LIBRARY_PATH="${LD_LIBRARY_PATH}:/usr/local/cuda/lib64:/usr
 
 ### Ubuntu 20.04 WSL
 The plugin also works on Windows using Ubuntu 20.04 WSL. The requirements are the same as normal Ubuntu, just pay attention on using the 
-correct version of cuda compatible with WSL.
+correct version of cuda compatible with WSL. The other steps are the same as normal Ubuntu installation.
 ```bash
 # install cuda 11.6.1 WSL
 wget https://developer.download.nvidia.com/compute/cuda/repos/wsl-ubuntu/x86_64/cuda-wsl-ubuntu.pin
