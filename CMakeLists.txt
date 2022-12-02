@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.10)
-project(gstnvmaxine LANGUAGES C CXX VERSION 0.1.0)
+project(gstnvmaxine LANGUAGES C CXX VERSION 0.2.2)
 
 set(LIBRARY_SRC_PATH "${PROJECT_SOURCE_DIR}/src")
 

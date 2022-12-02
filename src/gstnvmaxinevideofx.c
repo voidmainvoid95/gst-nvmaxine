@@ -81,6 +81,7 @@ enum
   PROP_EFFECT,
   PROP_MODEL_DIR,
   PROP_STRENGTH,
+  PROP_MODE,
   PROP_UPSCALE_FACTOR,
   PROP_USE_METADATA,
   PROP_IMAGE_PATH,
@@ -147,13 +148,19 @@ gst_nv_maxine_videofx_class_init (GstNvMaxineVideoFxClass * klass)
                                                           G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS));
     g_object_class_install_property (gobject_class, PROP_STRENGTH,
                                      g_param_spec_float ("strength", "Strength",
-                                                         "For effect=ArtifactReduction, SuperRes: "
-                                                         "Strength of effect (0: conservative, 1: aggressive) Default 1\n\t\t\t"
-                                                         "For effect=Upscale, Denoising, BackgroundBlur: Strength of effect (value between 0 to 1) Default 0.4\n\t\t\t"
-                                                         "For effect=GreenScreen: (0: best quality, 1 best performance) Default 0",
+                                                         "For effect=Upscale, Denoising, BackgroundBlur: "
+                                                         "Strength of effect (value between 0 to 1) Default 0.4",
                                                          0.0,
                                                          1.0,
-                                                         DEFAULT_AR_STRENGTH,
+                                                         DEFAULT_STRENGTH,
+                                                         G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS));
+    g_object_class_install_property (gobject_class, PROP_MODE,
+                                     g_param_spec_uint ("mode", "Mode",
+                                                         "For effect=ArtifactReduction, SuperRes, GreenScreen: "
+                                                         "Effect mode: (0: quality mode, 1 performance mode) Default 1",
+                                                         0,
+                                                         1,
+                                                         DEFAULT_MODE,
                                                          G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS));
 
     g_object_class_install_property (gobject_class, PROP_UPSCALE_FACTOR,
@@ -210,6 +217,9 @@ gst_nv_maxine_videofx_set_property (GObject * object, guint property_id,
         case PROP_STRENGTH:
             maxine->videoFx.strength = g_value_get_float(value);
             break;
+        case PROP_MODE:
+            maxine->videoFx.mode = g_value_get_uint(value);
+            break;
         case PROP_UPSCALE_FACTOR:
             maxine->videoFx.upscaleFactor.numerator = gst_value_get_fraction_numerator(value);
             maxine->videoFx.upscaleFactor.denominator = gst_value_get_fraction_denominator(value);
@@ -244,7 +254,10 @@ gst_nv_maxine_videofx_get_property (GObject * object, guint property_id,
             g_value_set_string(value, maxine->videoFx.modelDir);
             break;
         case PROP_STRENGTH:
-            g_value_set_float (value, maxine->videoFx.strength);
+            g_value_set_float(value, maxine->videoFx.strength);
+            break;
+        case PROP_MODE:
+            g_value_set_uint(value, maxine->videoFx.mode);
             break;
         case PROP_UPSCALE_FACTOR:
             gst_value_set_fraction(value, maxine->videoFx.upscaleFactor.numerator, maxine->videoFx.upscaleFactor.denominator);
@@ -460,7 +473,7 @@ plugin_init (GstPlugin * plugin)
    remove these, as they're always defined.  Otherwise, edit as
    appropriate for your external plugin package. */
 #ifndef VERSION
-#define VERSION "0.2.0"
+#define VERSION "0.2.2"
 #endif
 #ifndef PACKAGE
 #define PACKAGE "gst-nvmaxine"
