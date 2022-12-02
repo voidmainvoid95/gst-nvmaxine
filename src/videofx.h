@@ -43,6 +43,9 @@
 #define DEFAULT_UPSCALE_FACTOR_DENOMINATOR 1
 #define NVVFX_FX_COMPOSITION "Composition"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
 typedef struct _UpscaleFactor{
     gint numerator;
     gint denominator;
@@ -71,9 +74,6 @@ typedef struct _VideoFx {
     gboolean initialized, useMetadata, buffersNegotiated;
 } VideoFx;
 
-#ifdef __cplusplus
-extern "C" {
-#endif
 void videofx_init(VideoFx *videofx);
 
 NvCV_Status videofx_create_effect(VideoFx *videoFx);
