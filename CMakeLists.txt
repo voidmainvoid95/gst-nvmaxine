@@ -16,6 +16,7 @@ set(GST_NV_MAXINE_VIDEOFX_SRC
         "${LIBRARY_SRC_PATH}/videofx.c"
         "${LIBRARY_SRC_PATH}/gstnvmaxinevideofx.c"
         "${LIBRARY_SRC_PATH}/utils.c"
+        "${LIBRARY_SRC_PATH}/nvVideoEffectsProxyDefinitions.cpp"
     )
 set(GST_NV_MAXINE_VIDEOFX_HDR
         "${LIBRARY_SRC_PATH}/gstnvmaxinevideofx.h"
@@ -53,7 +54,7 @@ endif()
 
 find_package(Gstreamer REQUIRED)
 find_package(NvVideoFx REQUIRED)
-find_package(GLIB REQUIRED)
+find_package(GLIB REQUIRED "gobject")
 find_package(JPEG REQUIRED)
 find_package(CUDA REQUIRED)
 
@@ -90,13 +91,13 @@ target_include_directories(${GST_NV_MAXINE_META} PUBLIC
 target_link_libraries(${GST_NV_MAXINE_META}
         ${GSTREAMER_LIBRARIES}
         ${GLIB_LIBRARIES}
-        ${JPEG_LIBRARIES}
+        ${JPEG_LIBRARY_RELEASE}
         )
-
+        message(STATUS ${NVMAXINE_LIBRARIES})
 if (MSVC)
-        set(GST_NV_MAXINE_VIDEOFX_SRC ${GST_NV_MAXINE_VIDEOFX_SRC} ${NVMAXINE_WINDOWS_PROXIES})
+        set(GST_NV_MAXINE_VIDEOFX_SRC ${GST_NV_MAXINE_VIDEOFX_SRC})
 endif()
-add_library(${GST_NV_MAXINE_VIDEOFX} SHARED ${GST_NV_MAXINE_VIDEOFX_SRC})
+add_library(${GST_NV_MAXINE_VIDEOFX} SHARED ${GST_NV_MAXINE_VIDEOFX_SRC} ${NVMAXINE_WINDOWS_PROXIES})
 
 target_include_directories(${GST_NV_MAXINE_VIDEOFX} PRIVATE
         $<BUILD_INTERFACE:${LIBRARY_SRC_PATH}>
@@ -109,3 +110,5 @@ target_link_libraries(${GST_NV_MAXINE_VIDEOFX} PUBLIC
         ${GST_NV_MAXINE_META}
         ${CUDA_LIBRARIES}
         )
+
+     set(NV_VIDEO_EFFECTS_PATH ${NVMAXINE_DIR}/bin)

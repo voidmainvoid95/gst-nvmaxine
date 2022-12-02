@@ -49,7 +49,6 @@ typedef struct _UpscaleFactor{
     float value;
 } UpscaleFactor;
 
-
 typedef struct _VideoFx {
     CUstream stream;
     gchar *effect, *modelDir, *imagePath;
