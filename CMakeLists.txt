@@ -95,9 +95,10 @@ target_link_libraries(${GST_NV_MAXINE_META}
         )
         message(STATUS ${NVMAXINE_LIBRARIES})
 if (MSVC)
-        set(GST_NV_MAXINE_VIDEOFX_SRC ${GST_NV_MAXINE_VIDEOFX_SRC})
+        set(GST_NV_MAXINE_VIDEOFX_SRC ${GST_NV_MAXINE_VIDEOFX_SRC}
+                                        "${LIBRARY_SRC_PATH}/nvVideoEffectsProxyDefinitions.cpp")
 endif()
-add_library(${GST_NV_MAXINE_VIDEOFX} SHARED ${GST_NV_MAXINE_VIDEOFX_SRC} ${NVMAXINE_WINDOWS_PROXIES})
+add_library(${GST_NV_MAXINE_VIDEOFX} SHARED ${GST_NV_MAXINE_VIDEOFX_SRC})
 
 target_include_directories(${GST_NV_MAXINE_VIDEOFX} PRIVATE
         $<BUILD_INTERFACE:${LIBRARY_SRC_PATH}>

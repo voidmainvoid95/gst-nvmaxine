@@ -11,8 +11,44 @@ SET(NVMAXINE_FOUND FALSE)
 IF (MSVC)
     SET(CMAKE_FIND_LIBRARY_SUFFIXES ".dll" ${CMAKE_FIND_LIBRARY_SUFFIXES})
     SET(NVMAXINE_WINDOWS_PROXIES ${NVMAXINE_DIR}/nvvfx/src/nvCVImageProxy.cpp ${NVMAXINE_DIR}/nvvfx/src/nvVideoEffectsProxy.cpp)
-    ADD_LIBRARY(NVVideoEffects INTERFACE)
-ELSE()
+ENDIF()
+
+FIND_PATH(VideoFX_INCLUDES NAMES nvVideoEffects.h
+        PATHS ${NVMAXINE_DIR}/nvvfx/include
+        /usr/local/VideoFX/include
+        /usr/include/x86_64-linux-gnu
+        /usr/include
+        ENV INCLUDE
+        )
+ADD_LIBRARY(NVVideoEffects INTERFACE)
+
+FIND_PATH(NVCVImage_INCLUDES NAMES nvCVImage.h nvCVStatus.h
+        PATHS ${NVMAXINE_DIR}/nvvfx/include
+        /usr/local/VideoFX/include
+        /usr/include/x86_64-linux-gnu
+        /usr/include
+        ENV INCLUDE
+        )
+
+FIND_LIBRARY(VideoFX_LIB NAMES NVVideoEffects VideoFX libVideoFX
+        PATHS ${NVMAXINE_DIR}/bin
+        /usr/local/VideoFX/lib
+        /usr/lib/x86_64-linux-gnu
+        /usr/lib64
+        /usr/lib
+        ENV LIB
+        NO_SYSTEM_ENVIRONMENT_PATH)
+
+FIND_LIBRARY(NVCVImage_LIB NAMES NVCVImage libNVCVImage
+        PATHS ${NVMAXINE_DIR}/bin
+        /usr/local/VideoFX/lib
+        /usr/lib/x86_64-linux-gnu
+        /usr/lib64
+        /usr/lib
+        ENV LIB
+        NO_SYSTEM_ENVIRONMENT_PATH)
+
+IF(NOT MSVC)
     FIND_LIBRARY(NVINFER nvinfer
             PATHS ${NVMAXINE_DIR}/bin
                 ${TENSORRT_DIR}/lib
@@ -49,65 +85,24 @@ ELSE()
             ENV LIB
             )
 
-    FIND_PATH(VideoFX_INCLUDES NAMES nvVideoEffects.h
-        PATHS ${NVMAXINE_DIR}/nvvfx/include
-            /usr/local/VideoFX/include
-            /usr/include/x86_64-linux-gnu
-            /usr/include
-        ENV INCLUDE
-        )
-
-    ADD_LIBRARY(NVVideoEffects INTERFACE)
     TARGET_LINK_LIBRARIES(NVVideoEffects INTERFACE "${VideoFX_LIB}")
-
-    FIND_LIBRARY(NVCVImage_LIB NAMES NVVideoEffects VideoFX libVideoFX
-    PATHS ${NVMAXINE_DIR}/bin
-        /usr/local/VideoFX/lib
-        /usr/lib/x86_64-linux-gnu
-        /usr/lib64
-        /usr/lib
-    ENV LIB
-    NO_SYSTEM_ENVIRONMENT_PATH)
-
-    FIND_PATH(NVCVImage_INCLUDES NAMES nvCVImage.h nvCVStatus.h
-        PATHS ${NVMAXINE_DIR}/nvvfx/include
-            /usr/local/VideoFX/include
-            /usr/include/x86_64-linux-gnu
-            /usr/include
-        ENV INCLUDE
-        )
-
-    FIND_LIBRARY(NVCVImage_LIB NAMES NVCVImage libNVCVImage
-            PATHS ${NVMAXINE_DIR}/bin
-                /usr/local/VideoFX/lib
-                /usr/lib/x86_64-linux-gnu
-                /usr/lib64
-                /usr/lib
-            ENV LIB
-            NO_SYSTEM_ENVIRONMENT_PATH)
-
     ADD_LIBRARY(NVCVImage INTERFACE)
     TARGET_LINK_LIBRARIES(NVCVImage INTERFACE "${NVCVImage_LIB}")
 ENDIF()
 
-
-IF(NVCVImage_LIB AND NVCVImage_INCLUDES AND 
-    VideoFX_LIB AND VideoFX_INCLUDES AND 
-    NVINFER AND NVINFERPLUGIN AND 
-    NVONNXPARSER AND NVPARSERS)
-  IF (MSVC)
-   SET(NVMAXINE_INCLUDE_DIR ${VideoFX_INCLUDES} ${NVCVImage_INCLUDES} ${NVMAXINE_DIR}/nvvfx/include)
-  ELSE()
+IF(NVCVImage_LIB AND NVCVImage_INCLUDES AND VideoFX_LIB AND VideoFX_INCLUDES)
     SET(NVMAXINE_INCLUDE_DIR ${VideoFX_INCLUDES} ${NVCVImage_INCLUDES})
-   ENDIF()
-  LIST(REMOVE_DUPLICATES NVMAXINE_INCLUDE_DIR)
-  IF (MSVC)
-    SET(NVMAXINE_LIBRARIES NVVideoEffects)
-  ELSE()
-    SET(NVMAXINE_LIBRARIES NVVideoEffects NVCVImage 
-                        ${NVINFER} ${NVINFERPLUGIN} 
-                        ${NVONNXPARSER} ${NVPARSERS})
-  ENDIF()
+    IF (MSVC)
+        SET(NVMAXINE_LIBRARIES NVVideoEffects)
+    ELSE()
+        IF(NVINFER AND NVINFERPLUGIN AND NVONNXPARSER AND NVPARSERS)
+            SET(NVMAXINE_LIBRARIES NVVideoEffects NVCVImage
+                    ${NVINFER} ${NVINFERPLUGIN}
+                    ${NVONNXPARSER} ${NVPARSERS})
+        ELSE()
+            SET(NVMAXINE_LIBRARIES NVVideoEffects NVCVImage)
+        ENDIF()
+    ENDIF()
   LIST(REMOVE_DUPLICATES NVMAXINE_LIBRARIES)
   SET(NVMAXINE_FOUND TRUE)
 ENDIF()
