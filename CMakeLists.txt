@@ -13,10 +13,10 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 #set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O2")
 
 set(GST_NV_MAXINE_VIDEOFX_SRC
-        "${LIBRARY_SRC_PATH}/videofx.c"
+        "src/videofx.cpp"
         "${LIBRARY_SRC_PATH}/gstnvmaxinevideofx.c"
-        "${LIBRARY_SRC_PATH}/utils.c"
-        "${LIBRARY_SRC_PATH}/nvVideoEffectsProxyDefinitions.cpp"
+        "src/utils.cpp"
+        
     )
 set(GST_NV_MAXINE_VIDEOFX_HDR
         "${LIBRARY_SRC_PATH}/gstnvmaxinevideofx.h"
@@ -95,8 +95,7 @@ target_link_libraries(${GST_NV_MAXINE_META}
         )
         message(STATUS ${NVMAXINE_LIBRARIES})
 if (MSVC)
-        set(GST_NV_MAXINE_VIDEOFX_SRC ${GST_NV_MAXINE_VIDEOFX_SRC}
-                                        "${LIBRARY_SRC_PATH}/nvVideoEffectsProxyDefinitions.cpp")
+        set(GST_NV_MAXINE_VIDEOFX_SRC ${GST_NV_MAXINE_VIDEOFX_SRC} ${NVMAXINE_WINDOWS_PROXIES})
 endif()
 add_library(${GST_NV_MAXINE_VIDEOFX} SHARED ${GST_NV_MAXINE_VIDEOFX_SRC})
 

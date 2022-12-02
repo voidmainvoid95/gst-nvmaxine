@@ -71,21 +71,24 @@ typedef struct _VideoFx {
     gboolean initialized, useMetadata, buffersNegotiated;
 } VideoFx;
 
+#ifdef __cplusplus
+extern "C" {
+#endif
 void videofx_init(VideoFx *videofx);
 
 NvCV_Status videofx_create_effect(VideoFx *videoFx);
 
 static NvCV_Status videofx_create_aux_green_screen(VideoFx *videoFx);
 
-void videofx_destroy_effect(VideoFx *videoFx);
+void videofx_destroy_effect(VideoFx * videoFx);
 
 NvCV_Status videofx_alloc_buffers(VideoFx *videoFx);
 
 NvCV_Status videofx_wrap_buffers(VideoFx *videoFx, guint8 *src, NvCVImage *src_wrapper, guint8 *dst, NvCVImage *dst_wrapper);
 
-void videofx_cleanup_buffers(VideoFx *videoFx);
+void videofx_cleanup_buffers(VideoFx * videoFx);
 
-NvCV_Status videofx_load_effect(VideoFx *videoFx);
+NvCV_Status videofx_load_effect(VideoFx * videoFx);
 
 static NvCV_Status videofx_load_aux_green_screen(VideoFx *videoFx);
 
@@ -104,5 +107,7 @@ NvCV_Status videofx_apply_composite_with_aux(VideoFx *videoFx, guint8 *src, guin
 GstFlowReturn videofx_transform_buffer(VideoFx *videoFx, GstBuffer *in_buffer, GstBuffer *out_buffer);
 
 #define CHECK_NvCV_RETURN_CODE(err) do { if (0 != (err)){ goto bail; } } while(0)
-
+#ifdef __cplusplus
+}
+#endif
 #endif

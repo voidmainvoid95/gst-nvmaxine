@@ -53,17 +53,6 @@ GST_DEBUG_CATEGORY_STATIC (gst_nv_maxine_videofx_debug_category);
 
 /* prototypes */
 
-#ifdef _WIN32
-#ifdef __cplusplus
-extern "C" {
-#endif
-    static char* g_nvVFXSDKPath = NULL;
-
-#ifdef __cplusplus
-}
-#endif
-#endif
-
 static void gst_nv_maxine_videofx_set_property (GObject * object,
     guint property_id, const GValue * value, GParamSpec * pspec);
 static void gst_nv_maxine_videofx_get_property (GObject * object,

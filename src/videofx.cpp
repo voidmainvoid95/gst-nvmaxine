@@ -22,6 +22,10 @@
 #include "videofx.h"
 #include <stdlib.h>
 
+#ifdef _WIN32
+char* g_nvVFXSDKPath = nullptr;
+#endif
+
 void videofx_init(VideoFx *videofx)
 {
     videofx->effect = g_strdup(NVVFX_FX_ARTIFACT_REDUCTION);
