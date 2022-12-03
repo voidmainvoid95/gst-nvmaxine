@@ -8,7 +8,7 @@ pkg_check_modules(PKG_GLIB QUIET glib-2.0)
 find_path(GLIBCONFIG_INCLUDE_DIR glibconfig.h
                     PATHS 
                         ${GLIB_DIR}/include
-                        ${GLIB_LIBRARY_DIR}
+                        ${GLIB_DIR}/lib/glib-2.0/include
                         ${PKG_GLIB_INCLUDEDIR}
                         ${PKG_GLIB_INCLUDE_DIRS}
                     PATH_SUFFIXES glib-2.0/include
@@ -17,7 +17,6 @@ find_path(GLIBCONFIG_INCLUDE_DIR glibconfig.h
 find_path(GLIB_INCLUDE_DIR glib.h
                     PATHS 
                         ${GLIB_DIR}/include
-                        ${GLIB_LIBRARY_DIR}
                         ${PKG_GLIB_INCLUDEDIR}
                         ${PKG_GLIB_INCLUDE_DIRS}
                     PATH_SUFFIXES glib-2.0
