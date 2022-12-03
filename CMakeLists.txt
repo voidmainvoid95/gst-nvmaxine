@@ -58,7 +58,7 @@ else()
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fPIC")
 endif()
 
-find_package(GSTREAMER REQUIRED "gstvideo")
+find_package(GSTREAMER REQUIRED "gstvideo;gstbase")
 find_package(NVMAXINE REQUIRED)
 find_package(GLIB REQUIRED "gobject")
 find_package(JPEG REQUIRED)
@@ -106,6 +106,7 @@ target_link_libraries(${GST_NV_MAXINE_VIDEOFX} PUBLIC
         ${CUDA_LIBRARIES}
         ${JPEG_LIBRARIES}
         )
+
 if (NOT MSVC)
     install(TARGETS ${GST_NV_MAXINE_META}
             LIBRARY DESTINATION ${GSTREAMER_LIBRARY_DIR}
