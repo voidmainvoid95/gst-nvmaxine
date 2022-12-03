@@ -22,15 +22,10 @@
 #ifndef _VIDEOFX_H
 #define _VIDEOFX_H
 
-#include <cuda_runtime_api.h>
 #include <nvVideoEffects.h>
 #include <nvCVImage.h>
 #include <gst/gst.h>
-#include <math.h>
 
-#include <stdlib.h>
-#include "gstnvmaxinemeta.h"
-#include "utils.h"
 
 #if _WIN32
     #define DEFAULT_MODEL_DIR "C:/Program\ Files\ (x86)/NVIDIA\ Corporation/NVIDIA\ VideoEffects/bin/models"

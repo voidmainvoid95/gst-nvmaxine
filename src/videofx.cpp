@@ -20,7 +20,11 @@
  */
 
 #include "videofx.h"
-#include <stdlib.h>
+#include "utils.h"
+#include <cstdlib>
+#include <cmath>
+#include <cuda_runtime_api.h>
+#include "gstnvmaxinemeta.h"
 
 #ifdef _WIN32
 char* g_nvVFXSDKPath = nullptr;

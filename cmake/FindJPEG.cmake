@@ -1,34 +1,32 @@
-FILE(TO_CMAKE_PATH "$ENV{JPEG_DIR}" TRY1_DIR)
-FILE(TO_CMAKE_PATH "${JPEG_DIR}" TRY2_DIR)
-FILE(GLOB JPEG_DIR ${TRY1_DIR} ${TRY2_DIR})
+file(TO_CMAKE_PATH "$ENV{JPEG_DIR}" TRY1_DIR)
+file(TO_CMAKE_PATH "${JPEG_DIR}" TRY2_DIR)
+file(GLOB JPEG_DIR ${TRY1_DIR} ${TRY2_DIR})
 
-FIND_PACKAGE(PkgConfig QUIET)
-PKG_CHECK_MODULES(PC_JPEG QUIET jpeg)
+find_package(PkgConfig QUIET)
+pkg_check_modules(PKG_JPEG QUIET jpeg)
 
 find_path(JPEG_INCLUDE_DIR jpeglib.h PATHS
                         ${JPEG_DIR}/include
-                        ${PC_JPEG_INCLUDEDIR}
-                        ${PC_JPEG_INCLUDE_DIRS}
+                        ${PKG_JPEG_INCLUDEDIR}
+                        ${PKG_JPEG_INCLUDE_DIRS}
                         ENV INCLUDE
 )
-
 set(jpeg_names ${JPEG_NAMES} jpeg jpeg-static libjpeg libjpeg-static)
 foreach(name ${jpeg_names})
   list(APPEND jpeg_names_debug "${name}d")
 endforeach()
-message(STATUS ${JPEG_INCLUDE_DIR})
 if(NOT JPEG_LIBRARY)
   find_library(JPEG_LIBRARY_RELEASE NAMES ${jpeg_names} 
                                     PATHS ${JPEG_DIR}/lib
-                                          ${PC_JPEG_LIBDIR}
-                                          ${PC_JPEG_LIBRARY_DIRS} 
+                                          ${PKG_JPEG_LIBDIR}
+                                          ${PKG_JPEG_LIBRARY_DIRS} 
                                     ENV LIB
                                     NO_SYSTEM_ENVIRONMENT_PATH
                                     }
   find_library(JPEG_LIBRARY_DEBUG NAMES ${jpeg_names_debug}    
                                   PATHS ${JPEG_DIR}/lib
-                                        ${PC_JPEG_LIBDIR}
-                                        ${PC_JPEG_LIBRARY_DIRS})
+                                        ${PKG_JPEG_LIBDIR}
+                                        ${PKG_JPEG_LIBRARY_DIRS})
   )
   mark_as_advanced(JPEG_LIBRARY_RELEASE JPEG_LIBRARY_DEBUG)
 endif()
@@ -65,7 +63,8 @@ if(JPEG_INCLUDE_DIR)
 endif()
 
 if(JPEG_FOUND)
-  set(JPEG_LIBRARIES ${JPEG_LIBRARY})
+  message(STATUS "Found: jpeg")
+  set(JPEG_LIBRARIES ${JPEG_LIBRARY_RELASE}  ${JPEG_LIBRARY_DEBUG})
   set(JPEG_INCLUDE_DIRS "${JPEG_INCLUDE_DIR}")
 
   if(NOT TARGET JPEG::JPEG)

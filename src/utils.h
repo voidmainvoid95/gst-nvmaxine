@@ -20,10 +20,7 @@
 #ifndef _UTILS_H
 #define _UTILS_H
 
-#include <fcntl.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <sys/stat.h>
+#include <cstdio>
 
 #if defined(linux) || defined(unix) || defined(__linux)
 	#include <unistd.h>

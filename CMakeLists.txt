@@ -10,12 +10,13 @@ if(NOT CMAKE_BUILD_TYPE)
 endif()
 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
+set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} -g")
 #set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O2")
 
 set(GST_NV_MAXINE_VIDEOFX_SRC
-        "src/videofx.cpp"
+        "${LIBRARY_SRC_PATH}/videofx.cpp"
         "${LIBRARY_SRC_PATH}/gstnvmaxinevideofx.c"
-        "src/utils.cpp"
+        "${LIBRARY_SRC_PATH}/utils.cpp"
         
     )
 set(GST_NV_MAXINE_VIDEOFX_HDR
@@ -37,44 +38,39 @@ set(GST_NV_MAXINE_META_HDR
 set(GST_NV_MAXINE_META "${PROJECT_NAME}meta")
 
 if (MSVC)
-   set(GSTREAMER_DIR "C:/gstreamer/1.0/msvc_x86_64")
-   set(NVMAXINE_DIR "C:/Program\ Files/NVIDIA\ Corporation/NVIDIA\ VideoEffects")
-   set(GLIB_DIR "C:/gstreamer/1.0/msvc_x86_64")
-   set(JPEG_DIR "C:/libjpeg-turbo64")
-   set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
-
+    if (NOT GSTREAMER_DIR)
+        set(GSTREAMER_DIR "C:/gstreamer/1.0/msvc_x86_64")
+    endif()
+    if (NOT NVMAXINE_DIR)
+        set(NVMAXINE_DIR "C:/Program\ Files/NVIDIA\ Corporation/NVIDIA\ VideoEffects")
+    endif()
+    if (NOT GLIB_DIR)
+        set(GLIB_DIR "C:/gstreamer/1.0/msvc_x86_64")
+    endif()
+    if (NOT JPEG_DIR)
+        set(JPEG_DIR "C:/libjpeg-turbo64")
+    endif()
+    set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
 else()
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fPIC")
-set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} -g")
-  #  install(TARGETS ${GST_NV_MAXINE_META}
-  #          LIBRARY DESTINATION ${PKG_GSTREAMER_LIB_DIR}
-  #          PUBLIC_HEADER DESTINATION ${PKG_GSTREAMER_INCLUDE_DIR}/gst)
-  #  install(TARGETS ${GST_NV_MAXINE_VIDEOFX} DESTINATION ${PKG_GSTREAMER_PLUGIN_DIR})
+    if (NOT TENSORRT_DIR)
+        set(TENSORRT_DIR "/usr/local/TensorRT-8.2.5.1")
+    endif()
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fPIC")
 endif()
 
-find_package(Gstreamer REQUIRED)
-find_package(NvVideoFx REQUIRED)
+find_package(GSTREAMER REQUIRED "gstvideo")
+find_package(NVMAXINE REQUIRED)
 find_package(GLIB REQUIRED "gobject")
 find_package(JPEG REQUIRED)
 find_package(CUDA REQUIRED)
 
 include_directories(
         ${GLIB_INCLUDE_DIRS}
-        ${GSTREAMER_INCLUDE_DIR}
+        ${NVMAXINE_INCLUDE_DIRS}
+        ${GSTREAMER_INCLUDE_DIRS}
         ${CUDA_INCLUDE_DIRS}
         ${CMAKE_CURRENT_SOURCE_DIR}
-        ${VideoFX_INCLUDES}
-        ${NVCVImage_INCLUDES}
         ${JPEG_INCLUDE_DIR}
-)
-
-link_directories(
-        ${GLIB_LIBRARY_DIRS}
-        ${GSTREAMER_LIBRARIES}
-        ${CUDA_TOOLKIT_ROOT_DIR}/lib64
-        ${JPEG_DIR}/lib
-        /usr/local/VideoFX/lib
-        /usr/local/TensorRT-7.2.2.3/lib
 )
 
 add_library(${GST_NV_MAXINE_META} SHARED ${GST_NV_MAXINE_META_SRC})
@@ -91,7 +87,7 @@ target_include_directories(${GST_NV_MAXINE_META} PUBLIC
 target_link_libraries(${GST_NV_MAXINE_META}
         ${GSTREAMER_LIBRARIES}
         ${GLIB_LIBRARIES}
-        ${JPEG_LIBRARY_RELEASE}
+        ${JPEG_LIBRARY}
         )
 
 if (MSVC)
@@ -111,4 +107,9 @@ target_link_libraries(${GST_NV_MAXINE_VIDEOFX} PUBLIC
         ${CUDA_LIBRARIES}
         )
 
-     set(NV_VIDEO_EFFECTS_PATH ${NVMAXINE_DIR}/bin)
+if (NOT MSVC)
+    install(TARGETS ${GST_NV_MAXINE_META}
+            LIBRARY DESTINATION ${GSTREAMER_LIBRARY_DIR}
+            PUBLIC_HEADER DESTINATION ${GSTREAMER_INCLUDE_DIR}/gst)
+    install(TARGETS ${GST_NV_MAXINE_VIDEOFX} DESTINATION ${GSTREAMER_PLUGIN_DIR})
+endif()

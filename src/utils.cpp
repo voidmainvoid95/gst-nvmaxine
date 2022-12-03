@@ -18,6 +18,9 @@
  */
 
 #include "utils.h"
+#include <sys/stat.h>
+#include <fcntl.h>
+#include <cstdlib>
 
 int load_image_jpeg(const char *path, unsigned char **dst, int *width, int *height, unsigned int *size)
 {
