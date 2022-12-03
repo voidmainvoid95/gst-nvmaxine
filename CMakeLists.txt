@@ -87,7 +87,6 @@ target_include_directories(${GST_NV_MAXINE_META} PUBLIC
 target_link_libraries(${GST_NV_MAXINE_META}
         ${GSTREAMER_LIBRARIES}
         ${GLIB_LIBRARIES}
-        ${JPEG_LIBRARY}
         )
 
 if (MSVC)
@@ -105,8 +104,8 @@ target_link_libraries(${GST_NV_MAXINE_VIDEOFX} PUBLIC
         ${GSTREAMER_LIBRARIES}
         ${GST_NV_MAXINE_META}
         ${CUDA_LIBRARIES}
+        ${JPEG_LIBRARIES}
         )
-
 if (NOT MSVC)
     install(TARGETS ${GST_NV_MAXINE_META}
             LIBRARY DESTINATION ${GSTREAMER_LIBRARY_DIR}

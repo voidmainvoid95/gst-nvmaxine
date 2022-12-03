@@ -16,22 +16,27 @@ foreach(name ${jpeg_names})
   list(APPEND jpeg_names_debug "${name}d")
 endforeach()
 if(NOT JPEG_LIBRARY)
-  find_library(JPEG_LIBRARY_RELEASE NAMES ${jpeg_names} 
+  find_library(JPEG_LIBRARY_RELEASE NAMES ${jpeg_names}
                                     PATHS ${JPEG_DIR}/lib
                                           ${PKG_JPEG_LIBDIR}
-                                          ${PKG_JPEG_LIBRARY_DIRS} 
+                                          ${PKG_JPEG_LIBRARY_DIRS}
                                     ENV LIB
                                     NO_SYSTEM_ENVIRONMENT_PATH
-                                    }
-  find_library(JPEG_LIBRARY_DEBUG NAMES ${jpeg_names_debug}    
+          )
+  find_library(JPEG_LIBRARY_DEBUG NAMES ${jpeg_names_debug}
                                   PATHS ${JPEG_DIR}/lib
                                         ${PKG_JPEG_LIBDIR}
                                         ${PKG_JPEG_LIBRARY_DIRS})
-  )
   mark_as_advanced(JPEG_LIBRARY_RELEASE JPEG_LIBRARY_DEBUG)
 endif()
 unset(jpeg_names)
 unset(jpeg_names_debug)
+
+if (JPEG_INCLUDE_DIR AND JPEG_LIBRARY_RELEASE)
+  set(JPEG_FOUND TRUE)
+else()
+  set(JPEG_FOUND TRUE)
+endif()
 
 if(JPEG_INCLUDE_DIR)
   file(GLOB _JPEG_CONFIG_HEADERS_FEDORA "${JPEG_INCLUDE_DIR}/jconfig*.h")
@@ -61,10 +66,12 @@ if(JPEG_INCLUDE_DIR)
   unset(_JPEG_CONFIG_HEADERS_FEDORA)
   unset(_JPEG_CONFIG_HEADERS_DEBIAN)
 endif()
-
 if(JPEG_FOUND)
   message(STATUS "Found: jpeg")
-  set(JPEG_LIBRARIES ${JPEG_LIBRARY_RELASE}  ${JPEG_LIBRARY_DEBUG})
+  set(JPEG_LIBRARIES ${JPEG_LIBRARY_RELEASE})
+  if (JPEG_LIBRARY_DEBUG)
+    set(JPEG_LIBRARIES ${JPEG_LIBRARIES} ${JPEG_LIBRARY_DEBUG})
+  endif()
   set(JPEG_INCLUDE_DIRS "${JPEG_INCLUDE_DIR}")
 
   if(NOT TARGET JPEG::JPEG)
