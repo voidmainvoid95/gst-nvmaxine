@@ -93,7 +93,7 @@ target_link_libraries(${GST_NV_MAXINE_META}
         ${GLIB_LIBRARIES}
         ${JPEG_LIBRARY_RELEASE}
         )
-        message(STATUS ${NVMAXINE_LIBRARIES})
+
 if (MSVC)
         set(GST_NV_MAXINE_VIDEOFX_SRC ${GST_NV_MAXINE_VIDEOFX_SRC} ${NVMAXINE_WINDOWS_PROXIES})
 endif()
