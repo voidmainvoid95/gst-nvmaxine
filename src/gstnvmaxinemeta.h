@@ -42,7 +42,6 @@ EXPORT_API GType gst_nv_maxine_meta_api_get_type (void);
 EXPORT_API const GstMetaInfo* gst_nv_maxine_meta_get_info (void);
 EXPORT_API GstNvMaxineMeta* gst_nv_maxine_meta_get(GstBuffer *buf);
 EXPORT_API GstNvMaxineMeta* gst_nv_maxine_meta_add(GstBuffer *buf);
-
 G_END_DECLS
 
 #endif

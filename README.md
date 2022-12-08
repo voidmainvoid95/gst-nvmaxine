@@ -48,7 +48,8 @@ sudo apt-get install \
     libgstreamer1.0-dev \
     libgstreamer-plugins-base1.0-dev \
     libgstreamer-plugins-good1.0-dev \
-    libgstreamer-plugins-bad1.0-dev
+    libgstreamer-plugins-bad1.0-dev \
+    libjpeg-dev
   ```
 ### Nvidia dependencies
 - **cuda-11.6.1**
@@ -108,7 +109,38 @@ provide:
 - cudnn-linux-x86_64-8.4.0.27_cuda11.6-archive.tar.xz
 - TensorRT-8.2.5.1.Linux.x86_64-gnu.cuda-11.4.cudnn8.2.tar.gz
 
-## Windows native
+## Windows
+
+### Base dependencies
+- **Microsoft Visual Studio 2019 or later** \
+This is the required version from Maxine documentation. The plugin was ported to windows using Visual Studio 2022.
+- **cmake 3.25.1** \
+https://github.com/Kitware/CMake/releases/download/v3.25.1/cmake-3.25.1-windows-x86_64.msi
+- **GStreamer MSVC**
+  https://gstreamer.freedesktop.org/download/ \
+You need both runtime and development packages
+- **libjpeg-turbo-2.x.x MSVC**
+  https://sourceforge.net/projects/libjpeg-turbo/files/2.1.4/libjpeg-turbo-2.1.4-vc64.exe/download
+### Nvidia dependencies
+- **cuda 11.6.1** 
+  - Windows 11 \
+  https://developer.download.nvidia.com/compute/cuda/11.6.1/local_installers/cuda_11.6.1_511.65_windows.exe
+  - Windows 10 \
+  https://developer.download.nvidia.com/compute/cuda/11.6.1/local_installers/cuda_11.6.1_511.65_windows.exe
+- **NVIDIA_VFX_SDK_Win_0.7.1.0.zip**
+https://catalog.ngc.nvidia.com/orgs/nvidia/teams/maxine/resources/maxine_windows_video_effects_sdk_ga/version
+
+Add these variables to system environment variable:
+- **GSTREAMER_1_0_ROOT_MSVC_X86_64** Pointing to gstreamer installation folder
+- **LIB_JPEG** Pointing to libjpeg-turbo installation folder
+- **NV_VIDEO_EFFECTS_PATH** Pointing to maxine VideoFx SDK installation folder
+
+Append these to **Path** system variable:
+- %GSTREAMER_1_0_ROOT_MSVC_X86_64%/bin
+- %GSTREAMER_1_0_ROOT_MSVC_X86_64%/lib
+- %LIB_JPEG%/bin
+- %LIB_JPEG%/lib
+
 
 ## Build
 Meson is currently unsupported use cmake. 
