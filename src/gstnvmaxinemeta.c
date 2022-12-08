@@ -76,3 +76,13 @@ gst_nv_maxine_meta_get_info (void)
     }
     return meta_info;
 }
+
+GstNvMaxineMeta *
+gst_nv_maxine_meta_add(GstBuffer *buf){
+    return (GstNvMaxineMeta *)gst_buffer_add_meta(buf,gst_nv_maxine_meta_get_info(),(gpointer)NULL);
+}
+
+GstNvMaxineMeta *
+gst_nv_maxine_meta_get(GstBuffer *buf){
+    return (GstNvMaxineMeta *)gst_buffer_get_meta(buf,gst_nv_maxine_meta_api_get_type());
+}

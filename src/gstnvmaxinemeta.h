@@ -23,7 +23,7 @@
 #include <gst/gst.h>
 #include <gst/gstmeta.h>
 
-#ifdef _WIN32
+#if _WIN32
 #define EXPORT_API __declspec(dllexport)
 #else
 #define EXPORT_API
@@ -40,8 +40,8 @@ struct _GstNvMaxineMeta {
 
 EXPORT_API GType gst_nv_maxine_meta_api_get_type (void);
 EXPORT_API const GstMetaInfo* gst_nv_maxine_meta_get_info (void);
-#define gst_nv_maxine_meta_get(buf) ((GstNvMaxineMeta *)gst_buffer_get_meta(buf,gst_nv_maxine_meta_api_get_type()))
-#define gst_nv_maxine_meta_add(buf) ((GstNvMaxineMeta *)gst_buffer_add_meta(buf,gst_nv_maxine_meta_get_info(),(gpointer)NULL))
+EXPORT_API GstNvMaxineMeta* gst_nv_maxine_meta_get(GstBuffer *buf);
+EXPORT_API GstNvMaxineMeta* gst_nv_maxine_meta_add(GstBuffer *buf);
 
 G_END_DECLS
 
