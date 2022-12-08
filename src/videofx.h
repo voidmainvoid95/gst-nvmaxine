@@ -28,7 +28,7 @@
 
 
 #if _WIN32
-    #define DEFAULT_MODEL_DIR "C:/Program\ Files\ (x86)/NVIDIA\ Corporation/NVIDIA\ VideoEffects/bin/models"
+    #define DEFAULT_MODEL_DIR "C:/Program\ Files\ (x86)/NVIDIA\ Corporation/NVIDIA\ Video\ Effects/bin/models"
 #elif defined(linux) || defined(unix) || defined(__linux)
     #define DEFAULT_MODEL_DIR "/usr/local/VideoFX/lib/models"
 #endif

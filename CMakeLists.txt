@@ -5,13 +5,12 @@ set(LIBRARY_SRC_PATH "${PROJECT_SOURCE_DIR}/src")
 
 set(CMAKE_SKIP_RPATH TRUE)
 
-if(NOT CMAKE_BUILD_TYPE)
+if(NOT ${CMAKE_BUILD_TYPE})
     set(CMAKE_BUILD_TYPE Release)
 endif()
 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
-set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} -g")
-#set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O2")
+set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O2")
 
 set(GST_NV_MAXINE_VIDEOFX_SRC
         "${LIBRARY_SRC_PATH}/videofx.cpp"
@@ -42,7 +41,7 @@ if (MSVC)
         set(GSTREAMER_DIR "C:/gstreamer/1.0/msvc_x86_64")
     endif()
     if (NOT NVMAXINE_DIR)
-        set(NVMAXINE_DIR "C:/Program\ Files/NVIDIA\ Corporation/NVIDIA\ VideoEffects")
+        set(NVMAXINE_DIR "C:/Program\ Files/NVIDIA\ Corporation/NVIDIA\ Video\ Effects")
     endif()
     if (NOT GLIB_DIR)
         set(GLIB_DIR "C:/gstreamer/1.0/msvc_x86_64")
@@ -50,11 +49,12 @@ if (MSVC)
     if (NOT JPEG_DIR)
         set(JPEG_DIR "C:/libjpeg-turbo64")
     endif()
-    set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
+  #  set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
 else()
     if (NOT TENSORRT_DIR)
         set(TENSORRT_DIR "/usr/local/TensorRT-8.2.5.1")
     endif()
+    set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} -g")
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fPIC")
 endif()
 
@@ -108,6 +108,6 @@ target_link_libraries(${GST_NV_MAXINE_VIDEOFX} PUBLIC
         )
 
 install(TARGETS ${GST_NV_MAXINE_META}
-        LIBRARY DESTINATION ${GSTREAMER_LIBRARY_DIR}
+        DESTINATION ${GSTREAMER_LIBRARY_DIR}
         PUBLIC_HEADER DESTINATION ${GSTREAMER_INCLUDE_DIR}/gst)
 install(TARGETS ${GST_NV_MAXINE_VIDEOFX} DESTINATION ${GSTREAMER_PLUGIN_DIR})

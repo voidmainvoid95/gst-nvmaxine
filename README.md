@@ -108,13 +108,23 @@ provide:
 - cudnn-linux-x86_64-8.4.0.27_cuda11.6-archive.tar.xz
 - TensorRT-8.2.5.1.Linux.x86_64-gnu.cuda-11.4.cudnn8.2.tar.gz
 
+## Windows native
+
 ## Build
 Meson is currently unsupported use cmake. 
 
 ```shell
-mkdir build && cd build
-cmake .. && make -j$(nproc)
-make install
+mkdir build 
+cd build
+cmake .. 
+
+# For Debug build
+cmake --build . --config Debug
+cmake --install  . --config Debug
+
+# For Release build
+cmake --build . --config Release
+cmake --install . --config Release
 ```
 
 # Examples
