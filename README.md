@@ -127,25 +127,32 @@ You need both runtime and development packages
   https://developer.download.nvidia.com/compute/cuda/11.6.1/local_installers/cuda_11.6.1_511.65_windows.exe
   - Windows 10 \
   https://developer.download.nvidia.com/compute/cuda/11.6.1/local_installers/cuda_11.6.1_511.65_windows.exe
-- **NVIDIA_VFX_SDK_Win_0.7.1.0.zip**
-https://catalog.ngc.nvidia.com/orgs/nvidia/teams/maxine/resources/maxine_windows_video_effects_sdk_ga/version
+- **NVIDIA_VFX_SDK_Win_0.7.1.0.zip** development SDK 
+https://catalog.ngc.nvidia.com/orgs/nvidia/teams/maxine/resources/maxine_windows_video_effects_sdk_ga/version \
+Install in **C:\\Program Files\\NVIDIA Corporation\\NVIDIA Video Effects\\**.
 
 Add these variables to system environment variable:
 - **GSTREAMER_1_0_ROOT_MSVC_X86_64** Pointing to gstreamer installation folder
 - **LIB_JPEG** Pointing to libjpeg-turbo installation folder
-- **NV_VIDEO_EFFECTS_PATH** Pointing to maxine VideoFx SDK installation folder
+- **NV_VIDEO_EFFECTS_PATH** Pointing to maxine VideoFX SDK installation folder
 
 Append these to **Path** system variable:
-- %GSTREAMER_1_0_ROOT_MSVC_X86_64%/bin
-- %GSTREAMER_1_0_ROOT_MSVC_X86_64%/lib
-- %LIB_JPEG%/bin
-- %LIB_JPEG%/lib
-
+- **%GSTREAMER_1_0_ROOT_MSVC_X86_64%\\bin**
+- **%GSTREAMER_1_0_ROOT_MSVC_X86_64%\\lib**
+- **%LIB_JPEG%\\bin**
+- **%LIB_JPEG%\\lib**
 
 ## Build
-Meson is currently unsupported use cmake. 
+You can specify the installation directory of the libraries using following cmake variables:
+- Windows
+  - **GSTREAMER_DIR** default: C:\\gstreamer\\1.0\\msvc_x86_64
+  - **NVMAXINE_DIR** default C:\\Program Files\\NVIDIA Corporation\\NVIDIA Video Effects
+  - **GLIB_DIR** default: C:\\gstreamer\\1.0\\msvc_x86_64
+  - **JPEG_DIR** default: C:\\libjpeg-turbo64
+- Ubuntu 20.04
+  - **TENSORRT_DIR** default: /usr/local/TensorRT-8.2.5.1
 
-```shell
+```bash
 mkdir build 
 cd build
 cmake .. 
