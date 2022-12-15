@@ -53,7 +53,6 @@ GST_DEBUG_CATEGORY_STATIC (gst_nv_maxine_videofx_debug_category);
 
 /* prototypes */
 
-
 static void gst_nv_maxine_videofx_set_property (GObject * object,
     guint property_id, const GValue * value, GParamSpec * pspec);
 static void gst_nv_maxine_videofx_get_property (GObject * object,
@@ -473,7 +472,7 @@ plugin_init (GstPlugin * plugin)
    remove these, as they're always defined.  Otherwise, edit as
    appropriate for your external plugin package. */
 #ifndef VERSION
-#define VERSION "0.2.1"
+#define VERSION "0.2.2"
 #endif
 #ifndef PACKAGE
 #define PACKAGE "gst-nvmaxine"

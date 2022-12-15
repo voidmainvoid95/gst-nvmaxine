@@ -20,7 +20,15 @@
  */
 
 #include "videofx.h"
-#include <stdlib.h>
+#include "utils.h"
+#include <cstdlib>
+#include <cmath>
+#include <cuda_runtime_api.h>
+#include "gstnvmaxinemeta.h"
+
+#ifdef _WIN32
+char* g_nvVFXSDKPath = nullptr;
+#endif
 
 void videofx_init(VideoFx *videofx)
 {
@@ -328,7 +336,7 @@ void videofx_set_buffers_params(VideoFx *videoFx, gint width, gint height, const
     videoFx->sourceWidth = width;
     videoFx->sourceHeight = height;
     if (!g_strcmp0(videoFx->effect, NVVFX_FX_SUPER_RES) || !g_strcmp0(videoFx->effect, NVVFX_FX_SR_UPSCALE)){
-        videoFx->targetHeight = ceilf(videoFx->sourceHeight * videoFx->upscaleFactor.value);
+        videoFx->targetHeight = (guint) ceilf(videoFx->sourceHeight * videoFx->upscaleFactor.value);
         videoFx->targetWidth = videoFx->sourceWidth * videoFx->targetHeight / videoFx->sourceHeight;
     }
     else{
@@ -340,39 +348,39 @@ void videofx_set_buffers_params(VideoFx *videoFx, gint width, gint height, const
         videoFx->sourceFormat = NVCV_BGR;
         videoFx->sourceComponentType = NVCV_U8;
         videoFx->sourceLayout = NVCV_INTERLEAVED;
-        videoFx->sourceSize = videoFx->sourceWidth * videoFx->sourceHeight * 3 * sizeof(guint8);
+        videoFx->sourceSize = (gsize) videoFx->sourceWidth * videoFx->sourceHeight * 3 * sizeof(guint8);
         videoFx->sourcePitch = videoFx->sourceWidth * 3;
 
         videoFx->targetFormat = NVCV_BGR;
         videoFx->targetComponentType = NVCV_U8;
         videoFx->targetLayout = NVCV_INTERLEAVED;
-        videoFx->targetSize = videoFx->targetWidth * videoFx->targetHeight * 3 * sizeof(guint8);
+        videoFx->targetSize = (gsize) videoFx->targetWidth * videoFx->targetHeight * 3 * sizeof(guint8);
         videoFx->targetPitch = videoFx->targetWidth * 3;
     }
     else if (!g_strcmp0(format, "I420")){
         videoFx->sourceFormat = NVCV_YUV420;
         videoFx->sourceComponentType = NVCV_U8;
         videoFx->sourceLayout = NVCV_YUV;
-        videoFx->sourceSize = videoFx->sourceWidth * videoFx->sourceHeight * 3 / 2 * sizeof(guint8);
+        videoFx->sourceSize = (gsize) videoFx->sourceWidth * videoFx->sourceHeight * 3 / 2 * sizeof(guint8);
         videoFx->sourcePitch = videoFx->sourceWidth;
 
         videoFx->targetFormat = NVCV_YUV420;
         videoFx->targetComponentType = NVCV_U8;
         videoFx->targetLayout = NVCV_YUV;
-        videoFx->targetSize = videoFx->targetWidth * videoFx->targetHeight * 3 / 2 * sizeof(guint8);
+        videoFx->targetSize = (gsize) videoFx->targetWidth * videoFx->targetHeight * 3 / 2 * sizeof(guint8);
         videoFx->targetPitch = videoFx->targetWidth;
     }
     else if (!g_strcmp0(format, "NV12")){
         videoFx->sourceFormat = NVCV_YUV420;
         videoFx->sourceComponentType = NVCV_U8;
         videoFx->sourceLayout = NVCV_NV12;
-        videoFx->sourceSize = videoFx->sourceWidth * videoFx->sourceHeight * 3 / 2 * sizeof(guint8);
+        videoFx->sourceSize = (gsize) videoFx->sourceWidth * videoFx->sourceHeight * 3 / 2 * sizeof(guint8);
         videoFx->sourcePitch = videoFx->sourceWidth;
 
         videoFx->targetFormat = NVCV_YUV420;
         videoFx->targetComponentType = NVCV_U8;
         videoFx->targetLayout = NVCV_NV12;
-        videoFx->targetSize = videoFx->targetWidth * videoFx->targetHeight * 3 / 2 * sizeof(guint8);
+        videoFx->targetSize = (gsize) videoFx->targetWidth * videoFx->targetHeight * 3 / 2 * sizeof(guint8);
         videoFx->targetPitch = videoFx->targetWidth;
     }
 
@@ -528,7 +536,7 @@ GstFlowReturn videofx_transform_buffer(VideoFx *videoFx, GstBuffer *in_buffer, G
             memcpy(outbuf_map.data, inbuf_map.data, videoFx->sourceSize);
             gst_buffer_unmap(out_buffer, &outbuf_map);
             meta = gst_nv_maxine_meta_add(out_buffer);
-            gsize fg_mask_size =  videoFx->sourceWidth * videoFx->sourceHeight * sizeof(guint8);
+            gsize fg_mask_size =  (gsize) videoFx->sourceWidth * videoFx->sourceHeight * sizeof(guint8);
             meta->buffer = gst_buffer_new_allocate(NULL, fg_mask_size, NULL);
             if (!gst_buffer_map(meta->buffer, &outbuf_map, GST_MAP_WRITE)) {
                 gst_buffer_unmap(in_buffer, &inbuf_map);

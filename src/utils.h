@@ -20,12 +20,13 @@
 #ifndef _UTILS_H
 #define _UTILS_H
 
-#include <fcntl.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
-#include <syslog.h>
-#include <sys/stat.h>
+#include <cstdio>
+
+#if defined(linux) || defined(unix) || defined(__linux)
+	#include <unistd.h>
+#elif _WIN32
+	#include<io.h>
+#endif
 
 #include <jpeglib.h>
 

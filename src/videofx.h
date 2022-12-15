@@ -22,17 +22,16 @@
 #ifndef _VIDEOFX_H
 #define _VIDEOFX_H
 
-#include <cuda_runtime_api.h>
 #include <nvVideoEffects.h>
 #include <nvCVImage.h>
 #include <gst/gst.h>
-#include <math.h>
-#include <unistd.h>
-#include <stdlib.h>
-#include "gstnvmaxinemeta.h"
-#include "utils.h"
 
-#define DEFAULT_MODEL_DIR "/usr/local/VideoFX/lib/models"
+
+#if _WIN32
+    #define DEFAULT_MODEL_DIR "C:/Program\ Files\ (x86)/NVIDIA\ Corporation/NVIDIA\ Video\ Effects/bin/models"
+#elif defined(linux) || defined(unix) || defined(__linux)
+    #define DEFAULT_MODEL_DIR "/usr/local/VideoFX/lib/models"
+#endif
 #define DEFAULT_STRENGTH 0.4
 #define DEFAULT_MODE 1
 #define DEFAULT_UPSCALE_FACTOR_NUMERATOR 2
@@ -44,7 +43,6 @@ typedef struct _UpscaleFactor{
     gint denominator;
     float value;
 } UpscaleFactor;
-
 
 typedef struct _VideoFx {
     CUstream stream;
@@ -68,21 +66,24 @@ typedef struct _VideoFx {
     gboolean initialized, useMetadata, buffersNegotiated;
 } VideoFx;
 
+#ifdef __cplusplus
+extern "C" {
+#endif
 void videofx_init(VideoFx *videofx);
 
 NvCV_Status videofx_create_effect(VideoFx *videoFx);
 
 static NvCV_Status videofx_create_aux_green_screen(VideoFx *videoFx);
 
-void videofx_destroy_effect(VideoFx *videoFx);
+void videofx_destroy_effect(VideoFx * videoFx);
 
 NvCV_Status videofx_alloc_buffers(VideoFx *videoFx);
 
 NvCV_Status videofx_wrap_buffers(VideoFx *videoFx, guint8 *src, NvCVImage *src_wrapper, guint8 *dst, NvCVImage *dst_wrapper);
 
-void videofx_cleanup_buffers(VideoFx *videoFx);
+void videofx_cleanup_buffers(VideoFx * videoFx);
 
-NvCV_Status videofx_load_effect(VideoFx *videoFx);
+NvCV_Status videofx_load_effect(VideoFx * videoFx);
 
 static NvCV_Status videofx_load_aux_green_screen(VideoFx *videoFx);
 
@@ -101,5 +102,7 @@ NvCV_Status videofx_apply_composite_with_aux(VideoFx *videoFx, guint8 *src, guin
 GstFlowReturn videofx_transform_buffer(VideoFx *videoFx, GstBuffer *in_buffer, GstBuffer *out_buffer);
 
 #define CHECK_NvCV_RETURN_CODE(err) do { if (0 != (err)){ goto bail; } } while(0)
-
+#ifdef __cplusplus
+}
+#endif
 #endif

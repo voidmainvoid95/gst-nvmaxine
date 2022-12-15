@@ -18,6 +18,9 @@
  */
 
 #include "utils.h"
+#include <sys/stat.h>
+#include <fcntl.h>
+#include <cstdlib>
 
 int load_image_jpeg(const char *path, unsigned char **dst, int *width, int *height, unsigned int *size)
 {
@@ -37,7 +40,7 @@ int load_image_jpeg(const char *path, unsigned char **dst, int *width, int *heig
         return rc;
     }
     jpg_size = file_info.st_size;
-    jpg_buffer = (unsigned char*) malloc(jpg_size + 100);
+    jpg_buffer = (unsigned char*) malloc((size_t)jpg_size + 100);
 
     int fd = open(path, O_RDONLY);
     i = 0;
