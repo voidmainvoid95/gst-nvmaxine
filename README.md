@@ -175,51 +175,51 @@ gst-inspect-1.0 nvmaxinevideofx
 
 ## Simple pipeline
 ```shell
-gst-launch-1.0 filesrc location="example_input.mp4" ! \
+gst-launch-1.0 filesrc location="example_video.mp4" ! \
 qtdemux ! avdec_h264 ! queue ! \
 nvmaxinevideofx effect=SuperRes modeldir="/usr/local/VideoFX/lib/models" mode=1 upscalefactor=2 ! queue ! \
-x264enc ! qtmux ! filesink location="example_output.mp4"
+x264enc ! qtmux ! filesink location="example_video_output.mp4"
 ```
 
 ## Multiple effect on same pipeline
 ```shell
-gst-launch-1.0 filesrc location="example_input.mp4" ! \
+gst-launch-1.0 filesrc location="example_video.mp4" ! \
 qtdemux ! avdec_h264 ! queue ! \
 nvmaxinevideofx effect=ArtifactReduction modeldir="/usr/local/VideoFX/lib/models" mode=1 ! queue ! \
 nvmaxinevideofx effect=Denoising modeldir="/usr/local/VideoFX/lib/models" strength=1 ! queue ! \
 nvmaxinevideofx effect=SuperRes modeldir="/usr/local/VideoFX/lib/models" mode=1 upscalefactor=2 ! queue ! \
-x264enc ! qtmux ! filesink location="example_output.mp4"
+x264enc ! qtmux ! filesink location="example_video_output.mp4"
 ```
 
 ## Using GreenScreen
 GreenScreen filter append foreground mask to buffer metadata using **gstnvmaxinemeta**. You must
 provide metadata=1 to BackgroundBlur or Composition if these effect are used after GreenScreen.
 ```shell
-gst-launch-1.0 filesrc location="example_input.mp4" ! \
+gst-launch-1.0 filesrc location="example_video.mp4" ! \
 qtdemux ! avdec_h264 ! queue ! \
 nvmaxinevideofx effect=GreenScreen modeldir="/usr/local/VideoFX/lib/models" mode=0 ! queue ! \
 nvmaxinevideofx effect=BackgroundBlur modeldir="/usr/local/VideoFX/lib/models" strength=1.0 metadata=1 ! queue ! \
-x264enc ! qtmux ! filesink location="example_output.mp4"
+x264enc ! qtmux ! filesink location="example_video_output.mp4"
 
-gst-launch-1.0 filesrc location="example_input.mp4" ! \
+gst-launch-1.0 filesrc location="example_video.mp4" ! \
 qtdemux ! avdec_h264 ! queue ! \
 nvmaxinevideofx effect=GreenScreen modeldir="/usr/local/VideoFX/lib/models" mode=0 ! queue ! \
 nvmaxinevideofx effect=Composition modeldir="/usr/local/VideoFX/lib/models" strength=1.0 metadata=1 imagepath="example_bg.jpeg" ! queue ! \
-x264enc ! qtmux ! filesink location="example_output.mp4"
+x264enc ! qtmux ! filesink location="example_video_output.mp4"
 ```
 
 ## Standalone BackgroundBlur and Composition
 Both effects have standalone mode in which GreenScreen is used internally. 
 ```bash
-gst-launch-1.0 filesrc location="example_input.mp4" ! \
+gst-launch-1.0 filesrc location="example_video.mp4" ! \
 qtdemux ! avdec_h264 ! queue ! \
 nvmaxinevideofx effect=BackgroundBlur modeldir="/usr/local/VideoFX/lib/models" strength=1.0 ! queue ! \
-x264enc ! qtmux ! filesink location="example_output.mp4"
+x264enc ! qtmux ! filesink location="example_video_output.mp4"
 
-gst-launch-1.0 filesrc location="example_input.mp4" ! \
+gst-launch-1.0 filesrc location="example_video.mp4" ! \
 qtdemux ! avdec_h264 ! queue ! \
 nvmaxinevideofx effect=Composition modeldir="/usr/local/VideoFX/lib/models" strength=1.0 imagepath="example_bg.jpeg" ! queue ! \
-x264enc ! qtmux ! filesink location="example_output.mp4"
+x264enc ! qtmux ! filesink location="example_video_output.mp4"
 ```
 
 # Work in progress
