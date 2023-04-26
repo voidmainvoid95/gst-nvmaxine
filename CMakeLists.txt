@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.10)
-project(gstnvmaxine LANGUAGES C CXX VERSION 0.2.2)
+project(gstnvmaxine LANGUAGES C CXX VERSION 0.2.3)
 
 set(LIBRARY_SRC_PATH "${PROJECT_SOURCE_DIR}/src")
 
@@ -51,7 +51,7 @@ if (MSVC)
     endif()
 else()
     if (NOT TENSORRT_DIR)
-        set(TENSORRT_DIR "/usr/local/TensorRT-8.2.5.1")
+        set(TENSORRT_DIR "/usr/local/TensorRT-8.5.1.7")
     endif()
     set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} -g")
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fPIC")

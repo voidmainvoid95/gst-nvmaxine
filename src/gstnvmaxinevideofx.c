@@ -472,7 +472,7 @@ plugin_init (GstPlugin * plugin)
    remove these, as they're always defined.  Otherwise, edit as
    appropriate for your external plugin package. */
 #ifndef VERSION
-#define VERSION "0.2.2"
+#define VERSION "0.2.3"
 #endif
 #ifndef PACKAGE
 #define PACKAGE "gst-nvmaxine"

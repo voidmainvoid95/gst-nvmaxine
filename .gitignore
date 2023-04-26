@@ -1,6 +1,6 @@
-TensorRT-8.2.5.1.Linux.x86_64-gnu.cuda-11.4.cudnn8.2.tar.gz
-cudnn-linux-x86_64-8.4.0.27_cuda11.6-archive.tar.xz
-NVIDIA_VFX_SDK_Linux_0.7.1.0.tgz
+TensorRT-8.5.1.7.Linux.x86_64-gnu.cuda-11.8.cudnn8.6.tar.gz
+cudnn-linux-x86_64-8.6.0.163_cuda11-archive.tar.xz
+videofx-sdk-linux_0.7.2.0.tgz
 .idea
 tools
 build
