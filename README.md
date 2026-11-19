@@ -71,14 +71,14 @@ sudo apt-get update
 sudo apt-get -y install cuda
 
 # install cudnn
-tar -xvf cudnn-linux-x86_64-8.6.0.163_cuda11-archive.tar.xz /tmp
+tar -xvf cudnn-linux-x86_64-8.6.0.163_cuda11-archive.tar.xz -C /tmp
 sudo mv /tmp/cudnn-linux-x86_64-8.6.0.163_cuda11-archive/LICENSE /usr/local/cuda
 sudo mv /tmp/cudnn-linux-x86_64-8.6.0.163_cuda11-archive/include/* /usr/local/cuda/include
 sudo mv /tmp/cudnn-linux-x86_64-8.6.0.163_cuda11-archive/lib/* /usr/local/cuda/lib64
 rm -rf /tmp/cudnn-linux-x86_64-8.6.0.163_cuda11-archive
 
 # install TensorRT
-sudo tar -xvf TensorRT-8.5.1.7.Linux.x86_64-gnu.cuda-11.8.cudnn8.6.tar.gz /usr/local
+sudo tar -xvf TensorRT-8.5.1.7.Linux.x86_64-gnu.cuda-11.8.cudnn8.6.tar.gz -C /usr/local
 
 # install NVIDIA VFK
 sudo tar -xvf videofx-sdk-linux_0.7.2.0.tgz -C /usr/local
